@@ -1,1 +1,1 @@
-web: PORT_API=3000 go run backend/server.go & node frontend/tsuntsun/index.js & wait -n
+web: node frontend/tsuntsun/index.js & wait -n
