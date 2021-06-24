@@ -1,4 +1,7 @@
 {
+  "engines": {
+     "yarn": "1.22.10"
+  },
   "scripts": {
     "heroku-prebuild": "cd ./frontend/tsuntsun  && yarn install",
     "heroku-postbuild": "cd ./frontend/tsuntsun && yarn build && cd ../../backend"
