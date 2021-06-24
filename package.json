@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "heroku-prebuild": "cd backend",
-    "heroku-postbuild": "cd ../frontend/tsuntsun && yarn install && yarn build"
+    "heroku-prebuild": "cd frontend/tsuntsun",
+    "heroku-postbuild": "cd frontend/tsuntsun && yarn build && cd ../../backend"
   }
 }
