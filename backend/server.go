@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,10 +16,10 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
-	http.HandleFunc("/", handler)
-	http.ListenAndServe(":"+port, nil)
+	e.GET("/", handler)
+	e.Start(":"+port)
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, %q", r.URL.Path[1:])
+func handler(c echo.Context) error{
+	return c.JSON(http.StatusOK,  "Hello, world!")
 }
