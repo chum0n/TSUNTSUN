@@ -2,15 +2,21 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
-	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("../frontend/tsuntsun/build"))))
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 
-	// 前述のhomepageを記述してないと下の記述でしか動かない。他のパスだとバグる
-	// http.Handle("/", http.FileServer(http.Dir("./build")))
+	http.HandleFunc("/", handler)
+	http.ListenAndServe(":"+port, nil)
+}
 
-	fmt.Println("Server Started Port 8080")
-	http.ListenAndServe(":8080", nil)
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, %q", r.URL.Path[1:])
 }
