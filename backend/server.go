@@ -5,9 +5,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/labstack/echo"
 )
 
 func main() {
+	e := echo.New()
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("$PORT must be set")
