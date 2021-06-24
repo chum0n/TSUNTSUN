@@ -1,1 +1,1 @@
-web: node frontend/tsuntsun/index.js & wait -n
+web: go run backend/server.go
