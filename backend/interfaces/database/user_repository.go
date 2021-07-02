@@ -1,6 +1,10 @@
 package database
 
-import "github.com/yot-sailing/TSUNTSUN/domain"
+import (
+	"fmt"
+
+	"github.com/yot-sailing/TSUNTSUN/domain"
+)
 
 type UserRepository struct {
 	SqlHandler
@@ -13,6 +17,7 @@ func (db *UserRepository) Store(u domain.User) {
 func (db *UserRepository) Select() []domain.User {
 	user := []domain.User{}
 	db.FindAll(&user)
+	fmt.Println("repositoryは", user)
 	return user
 }
 func (db *UserRepository) Delete(id string) {
