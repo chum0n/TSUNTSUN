@@ -1,25 +1,15 @@
 package main
 
 import (
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/labstack/echo"
 )
 
 func main() {
 	e := echo.New()
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatal("$PORT must be set")
-	}
-
-	e.GET("/", handler)
-	e.Start(":"+port)
-}
-
-func handler(c echo.Context) error{
-	return c.JSON(http.StatusOK,  "Hello, world!")
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!")
+	})
+	e.Logger.Fatal(e.Start(":1323"))
 }
