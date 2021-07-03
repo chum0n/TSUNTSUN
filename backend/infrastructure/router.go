@@ -15,6 +15,7 @@ func Init() {
 	e := echo.New()
 	userController := controllers.NewUserController(NewSqlHandler())
 	tsundokuController := controllers.NewTsundokuController(NewSqlHandler())
+	tagController := controllers.NewTagController(NewSqlHandler())
 
 	// Middleware
 	logger := middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -96,6 +97,49 @@ func Init() {
 		}
 		tsundokuController.Delete(tsundokuID)
 		return c.String(http.StatusOK, "deleted tsundoku")
+	})
+
+	// タグ全取得
+	e.GET("api/users/:userID/tags", func(c echo.Context) error {
+		str_userID := c.Param("userID")
+		// intに変換
+		userID, err := strconv.Atoi(str_userID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		tags := tagController.GetTags(userID)
+		c.Bind(&tags)
+		return c.JSON(http.StatusOK, tags)
+	})
+
+	// タグ追加
+	e.POST("api/users/:userID/tags", func(c echo.Context) error {
+		str_userID := c.Param("userID")
+		// intに変換
+		userID, err := strconv.Atoi(str_userID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		tagController.CreateTag(c, userID)
+		return c.JSON(http.StatusOK, "created tag")
+	})
+
+	// タグ削除
+	// 積読削除
+	e.DELETE("api/users/:userID/tags/:tagID", func(c echo.Context) error {
+		// str_userID := c.Param("userID")
+		str_tagID := c.Param("tagID")
+		// intに変換
+		// userID, err := strconv.Atoi(str_userID)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+		tagID, err := strconv.Atoi(str_tagID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		tagController.Delete(tagID)
+		return c.String(http.StatusOK, "deleted tag")
 	})
 
 	port := os.Getenv("PORT")
