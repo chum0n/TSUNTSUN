@@ -16,6 +16,12 @@ func (db *TsundokuTagRepository) Select(userID int) []domain.TsundokuTag {
 	return tsundokuTags
 }
 
+func (db *TsundokuTagRepository) SelectByMultiIDs(tsundokuID, userID int) []domain.TsundokuTag {
+	tsundokuTags := []domain.TsundokuTag{}
+	db.FindObjByMultiIDs(&tsundokuTags, tsundokuID, userID)
+	return tsundokuTags
+}
+
 func (db *TsundokuTagRepository) Delete(id int) {
 	tsundokuTags := []domain.TsundokuTag{}
 	db.DeleteById(&tsundokuTags, id)

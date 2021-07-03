@@ -45,3 +45,11 @@ func (handler *SqlHandler) DeleteById(obj interface{}, id int) {
 func (handler *SqlHandler) FindAllUserItem(obj interface{}, userID int) {
 	handler.db.Find(obj, "user_id=?", userID)
 }
+
+func (handler *SqlHandler) FindObjByIDs(obj interface{}, ids []int) {
+	handler.db.Find(obj, ids)
+}
+
+func (handler *SqlHandler) FindObjByMultiIDs(obj interface{}, tsundokuID int, userID int) {
+	handler.db.Where("tsundoku_id=? AND user_id=?", tsundokuID, userID).Find(obj)
+}

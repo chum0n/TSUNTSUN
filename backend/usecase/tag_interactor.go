@@ -6,12 +6,12 @@ type TagInteractor struct {
 	TagRepository TagRepository
 }
 
-func (interactor *TagInteractor) Add(tag domain.Tag) {
-	interactor.TagRepository.Store(tag)
+func (interactor *TagInteractor) Add(tag domain.Tag) int {
+	return interactor.TagRepository.Store(tag)
 }
 
-func (interactor *TagInteractor) GetInfo(userID int) []domain.Tag {
-	return interactor.TagRepository.Select(userID)
+func (interactor *TagInteractor) GetInfo(tagID []int) []domain.Tag {
+	return interactor.TagRepository.Select(tagID)
 }
 
 func (interactor *TagInteractor) Delete(id int) {

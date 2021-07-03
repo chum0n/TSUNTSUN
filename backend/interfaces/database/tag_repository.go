@@ -6,13 +6,14 @@ type TagRepository struct {
 	SqlHandler
 }
 
-func (db *TagRepository) Store(tag domain.Tag) {
+func (db *TagRepository) Store(tag domain.Tag) int {
 	db.Create(&tag)
+	return tag.ID
 }
 
-func (db *TagRepository) Select(userID int) []domain.Tag {
+func (db *TagRepository) Select(tagIDs []int) []domain.Tag {
 	tags := []domain.Tag{}
-	db.FindAllUserItem(&tags, userID)
+	db.FindObjByIDs(&tags, tagIDs)
 	return tags
 }
 

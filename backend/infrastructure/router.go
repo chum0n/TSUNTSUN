@@ -108,6 +108,7 @@ func Init() {
 		if err != nil {
 			fmt.Println(err)
 		}
+
 		// TsundokuTagテーブルのユーザーの管理下のものを取得
 		tsundokuTags := tsundokuTagController.GetTsundokuTags(userID)
 		var tagIDs []int
@@ -122,14 +123,27 @@ func Init() {
 
 	// ユーザーが管理する積読についているタグ全取得
 	e.GET("api/users/:userID/tsundokus/:tsundokuID/tags", func(c echo.Context) error {
-		// str_userID := c.Param("userID")
-		// // intに変換
-		// userID, err := strconv.Atoi(str_userID)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-		// tagController.CreateTag(c, userID)
-		return c.JSON(http.StatusOK, "created tag")
+		str_userID := c.Param("userID")
+		str_tsundokuID := c.Param("tsundokuID")
+		// intに変換
+		userID, err := strconv.Atoi(str_userID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		tsundokuID, err := strconv.Atoi(str_tsundokuID)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		tsundokuTags := tsundokuTagController.GetTsundokuTagsByTsundokuIDandUserID(tsundokuID, userID)
+		var tagIDs []int
+		for _, tsundokuTag := range tsundokuTags {
+			tagIDs = append(tagIDs, tsundokuTag.TagID)
+		}
+		// tagIDからtagを取得
+		tags := tagController.GetTags(tagIDs)
+
+		return c.JSON(http.StatusOK, tags)
 	})
 
 	// タグ追加
@@ -145,7 +159,12 @@ func Init() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		tagController.CreateTag(c, userID, tsundokuID)
+
+		// Tagsテーブルにレコードを追加
+		tagID := tagController.CreateTag(c, userID)
+		// TsundokuTagsテーブルにレコードを追加
+		tsundokuTagController.CreateTsundokuTag(c, tsundokuID, userID, tagID)
+
 		return c.JSON(http.StatusOK, "created tag")
 	})
 

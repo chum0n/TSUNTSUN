@@ -21,17 +21,27 @@ func NewTagController(sqlHandler database.SqlHandler) *TagController {
 	}
 }
 
-func (controller *TagController) CreateTag(c echo.Context, userID int, tsundokuID int) {
+func (controller *TagController) CreateTag(c echo.Context, userID int) int {
 	tag := domain.Tag{}
 	c.Bind(&tag)
-	controller.Interactor.Add(tag)
-	createdTags := controller.Interactor.GetInfo(userID)
-	c.JSON(201, createdTags)
-	return
+	tagID := controller.Interactor.Add(tag)
+
+	// ユーザーの管理下のタグを取得
+	var tsundokuTagController *TsundokuTagController
+	tsundokuTags := tsundokuTagController.GetTsundokuTags(userID)
+	var tagIDs []int
+	for _, tsundokuTag := range tsundokuTags {
+		tagIDs = append(tagIDs, tsundokuTag.TagID)
+	}
+	tags := controller.GetTags(tagIDs)
+
+	c.JSON(201, tags)
+	return tagID
 }
 
-func (controller *TagController) GetTags(userID int) []domain.Tag {
-	res := controller.Interactor.GetInfo(userID)
+// 複数のtagIDからタグを取得
+func (controller *TagController) GetTags(tagIDs []int) []domain.Tag {
+	res := controller.Interactor.GetInfo(tagIDs)
 	return res
 }
 

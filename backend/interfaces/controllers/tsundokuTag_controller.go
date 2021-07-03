@@ -21,18 +21,27 @@ func NewTsundokuTagController(sqlHandler database.SqlHandler) *TsundokuTagContro
 	}
 }
 
-func (controller *TsundokuTagController) CreateTsundokuTag(c echo.Context, userID int, tsundokuID int) {
+func (controller *TsundokuTagController) CreateTsundokuTag(c echo.Context, userID int, tsundokuID int, tagID int) {
 	tsundokuTag := domain.TsundokuTag{
 		TsundokuID: tsundokuID,
-		//
+		TagID:      tagID,
+		UserID:     userID,
 	}
 	controller.Interactor.Add(tsundokuTag)
-	createdTsundokuTag := controller.Interactor.GetInfo(tsundokuID, tagID)
+	createdTsundokuTag := controller.Interactor.GetInfo(userID)
 	c.JSON(201, createdTsundokuTag)
+	return
 }
 
+// userIDからレコードを取得
 func (controller *TsundokuTagController) GetTsundokuTags(userID int) []domain.TsundokuTag {
 	res := controller.Interactor.GetInfo(userID)
+	return res
+}
+
+// tsundokuIDとuserIDからレコードを取得
+func (controller *TsundokuTagController) GetTsundokuTagsByTsundokuIDandUserID(tsundokuID, userID int) []domain.TsundokuTag {
+	res := controller.Interactor.GetInfoByMultiIDs(tsundokuID, userID)
 	return res
 }
 
