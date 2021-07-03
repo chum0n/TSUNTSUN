@@ -69,6 +69,14 @@ func Init() {
 		}
 		tsundokus := tsundokuController.GetTsundoku(userID)
 		c.Bind(&tsundokus)
+		for i, tsundoku := range tsundokus {
+			tsundokuTags := tsundokuTagController.GetTsundokuTagsByTsundokuIDandUserID(tsundoku.ID, userID)
+			var tagIDs []int
+			for _, tsundokuTag := range tsundokuTags {
+				tagIDs = append(tagIDs, tsundokuTag.TagID)
+			}
+			tsundokus[i].Tags = tagController.GetTags(tagIDs)
+		}
 		return c.JSON(http.StatusOK, tsundokus)
 	})
 
