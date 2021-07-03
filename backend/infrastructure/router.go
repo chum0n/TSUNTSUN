@@ -16,6 +16,7 @@ func Init() {
 	userController := controllers.NewUserController(NewSqlHandler())
 	tsundokuController := controllers.NewTsundokuController(NewSqlHandler())
 	tagController := controllers.NewTagController(NewSqlHandler())
+	tsundokuTagController := controllers.NewTsundokuTagController(NewSqlHandler())
 
 	// Middleware
 	logger := middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -99,7 +100,7 @@ func Init() {
 		return c.String(http.StatusOK, "deleted tsundoku")
 	})
 
-	// タグ全取得
+	// ユーザーが管理するタグ全取得
 	e.GET("api/users/:userID/tags", func(c echo.Context) error {
 		str_userID := c.Param("userID")
 		// intに変換
@@ -107,26 +108,49 @@ func Init() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		tags := tagController.GetTags(userID)
-		c.Bind(&tags)
+		// TsundokuTagテーブルのユーザーの管理下のものを取得
+		tsundokuTags := tsundokuTagController.GetTsundokuTags(userID)
+		var tagIDs []int
+		for _, tsundokuTag := range tsundokuTags {
+			tagIDs = append(tagIDs, tsundokuTag.TagID)
+		}
+		// tagIDからtagを取得
+		tags := tagController.GetTags(tagIDs)
+		// c.Bind(&tags)
 		return c.JSON(http.StatusOK, tags)
 	})
 
+	// ユーザーが管理する積読についているタグ全取得
+	e.GET("api/users/:userID/tsundokus/:tsundokuID/tags", func(c echo.Context) error {
+		// str_userID := c.Param("userID")
+		// // intに変換
+		// userID, err := strconv.Atoi(str_userID)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+		// tagController.CreateTag(c, userID)
+		return c.JSON(http.StatusOK, "created tag")
+	})
+
 	// タグ追加
-	e.POST("api/users/:userID/tags", func(c echo.Context) error {
+	e.POST("api/users/:userID/tsundokus/:tsundokuID/tags", func(c echo.Context) error {
 		str_userID := c.Param("userID")
+		str_tsundokuID := c.Param("tsundokuID")
 		// intに変換
 		userID, err := strconv.Atoi(str_userID)
 		if err != nil {
 			fmt.Println(err)
 		}
-		tagController.CreateTag(c, userID)
+		tsundokuID, err := strconv.Atoi(str_tsundokuID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		tagController.CreateTag(c, userID, tsundokuID)
 		return c.JSON(http.StatusOK, "created tag")
 	})
 
 	// タグ削除
-	// 積読削除
-	e.DELETE("api/users/:userID/tags/:tagID", func(c echo.Context) error {
+	e.DELETE("api/users/:userID/tsundokus/:tsundokuID/tags/:tagID", func(c echo.Context) error {
 		// str_userID := c.Param("userID")
 		str_tagID := c.Param("tagID")
 		// intに変換

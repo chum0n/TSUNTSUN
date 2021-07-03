@@ -21,7 +21,7 @@ func NewTagController(sqlHandler database.SqlHandler) *TagController {
 	}
 }
 
-func (controller *TagController) CreateTag(c echo.Context, userID int) {
+func (controller *TagController) CreateTag(c echo.Context, userID int, tsundokuID int) {
 	tag := domain.Tag{}
 	c.Bind(&tag)
 	controller.Interactor.Add(tag)
