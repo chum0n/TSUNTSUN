@@ -17,6 +17,7 @@ func main() {
 	infrastructure.Init()
 }
 
+// DBの最初のマイグレーションのためだけ
 func dbinit() {
 	err := godotenv.Load(".env")
 	if err != nil {

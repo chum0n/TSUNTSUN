@@ -43,3 +43,7 @@ func (handler *SqlHandler) FindAll(obj interface{}) {
 func (handler *SqlHandler) DeleteById(obj interface{}, id string) {
 	handler.db.Delete(obj, id)
 }
+
+func (handler *SqlHandler) FindAllUserItem(obj interface{}, userID string) {
+	handler.db.Find(obj, "user_id=", userID)
+}
