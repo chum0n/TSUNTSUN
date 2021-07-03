@@ -81,6 +81,23 @@ func Init() {
 		return c.String(http.StatusOK, "created tsundoku")
 	})
 
+	// 積読削除
+	e.DELETE("api/users/:userID/tsundokus/:tsundokuID", func(c echo.Context) error {
+		// str_userID := c.Param("userID")
+		str_tsundokuID := c.Param("tsundokuID")
+		// intに変換
+		// userID, err := strconv.Atoi(str_userID)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+		tsundokuID, err := strconv.Atoi(str_tsundokuID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		tsundokuController.Delete(tsundokuID)
+		return c.String(http.StatusOK, "deleted tsundoku")
+	})
+
 	port := os.Getenv("PORT")
 	// start server
 	e.Logger.Fatal(e.Start(":" + port))
