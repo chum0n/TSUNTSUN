@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 	"github.com/yot-sailing/TSUNTSUN/domain"
 	"github.com/yot-sailing/TSUNTSUN/infrastructure"
 
@@ -16,19 +18,19 @@ func main() {
 }
 
 func dbinit() {
-	DBMS := "postgres"
-	USER := "daisuke"
-	// PASS := "daisuke"
-	// HOST := "localhost"
-	// PORT := "5432"
-	// DBNAME := "TSUNTSUN"
-	// db, err := gorm.Open(DBMS, DBMS+"://"+USER+":"+PASS+"@"+HOST+":"+PORT+"/"+DBNAME)
-	// db, err := gorm.Open("postgres", "host=localhost port=5432 user=daisuke dbname=ex4 password=daisuke sslmode=disable")
-	db, err := gorm.Open(DBMS, "user="+USER+" dbname=TSUNTSUN password=daisuke sslmode=disable")
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println("envファイルが見当たりません")
+		panic(err.Error())
+	}
 
+	DBMS := os.Getenv("SQL_DBMS")
+	connection := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", os.Getenv("SQL_USERNAME"), os.Getenv("SQL_DBNAME"), os.Getenv("SQL_PASSWORD"))
+	db, err := gorm.Open(DBMS, connection)
 	if err != nil {
 		panic(err.Error())
 	}
+
 	db.LogMode(true)
 	db.AutoMigrate(domain.User{})
 	db.AutoMigrate(domain.Tsundoku{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")

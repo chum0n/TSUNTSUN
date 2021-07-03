@@ -1,7 +1,11 @@
 package infrastructure
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 	"github.com/yot-sailing/TSUNTSUN/interfaces/database"
 )
 
@@ -10,9 +14,15 @@ type SqlHandler struct {
 }
 
 func NewSqlHandler() database.SqlHandler {
-	DBMS := "postgres"
-	USER := "daisuke"
-	db, err := gorm.Open(DBMS, "user="+USER+" dbname=TSUNTSUN password=daisuke sslmode=disable")
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println("envファイルが見当たりません")
+		panic(err.Error())
+	}
+
+	DBMS := os.Getenv("SQL_DBMS")
+	connection := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", os.Getenv("SQL_USERNAME"), os.Getenv("SQL_DBNAME"), os.Getenv("SQL_PASSWORD"))
+	db, err := gorm.Open(DBMS, connection)
 	if err != nil {
 		panic(err.Error())
 	}
