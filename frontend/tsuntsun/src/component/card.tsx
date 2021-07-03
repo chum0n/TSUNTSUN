@@ -1,16 +1,19 @@
 import styled from "styled-components";
-import Tsumi from "./tsumi";
+import Tsumi, { TsumiObject } from "./tsumi";
 
-const Card: React.FC<{ name: string }> = ({ name }) => {
-  const list = [];
-  for (let index = 0; index < 10; index++) {
-    list.push(<Tsumi key={index}></Tsumi>);
-  }
+const Card: React.FC<{ name: string; tsumis: TsumiObject[] }> = ({
+  name,
+  tsumis,
+}) => {
+  const list: JSX.Element[] = [];
+  tsumis.forEach((tsumi) => {
+    list.push(<Tsumi key={tsumi.id} {...tsumi}></Tsumi>);
+  });
   return (
     <div>
       <h2>{name}</h2>
       <div>
-        10/<NumBig>20</NumBig>件
+        10/<NumBig>{tsumis.length}</NumBig>件
       </div>
       {list}
     </div>

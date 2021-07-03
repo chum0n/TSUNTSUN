@@ -2,13 +2,28 @@ import styled from "styled-components";
 import Button from "./button";
 import Tag from "./tag";
 
-function Tsumi() {
+export type TsumiObject = {
+  author: string;
+  category: string;
+  createdAt?: Date;
+  deadline?: Date;
+  id: number;
+  requiredTime: string;
+  title: string;
+  url: string;
+  tags: TagObject[];
+};
+
+export type TagObject = {
+  id: string;
+  name: string;
+};
+
+const Tsumi: React.FC<TsumiObject> = (tsumi) => {
   return (
     <Article>
       <ContentWrap>
-        <Title>
-          TSUNTSUNでサイトを積み始めたら、爆速で消化できるようになった話
-        </Title>
+        <Title>{tsumi.title}</Title>
         <StatusBlack>
           <Status>
             <NumBig>30</NumBig>日経過
@@ -26,7 +41,7 @@ function Tsumi() {
       <Button>読んだ</Button>
     </Article>
   );
-}
+};
 
 export default Tsumi;
 
