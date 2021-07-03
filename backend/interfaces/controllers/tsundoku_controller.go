@@ -1,6 +1,7 @@
 package controllers
 
 import (
+        "time"
 	"github.com/labstack/echo"
 	"github.com/yot-sailing/TSUNTSUN/domain"
 	"github.com/yot-sailing/TSUNTSUN/interfaces/database"
@@ -23,7 +24,9 @@ func NewTsundokuController(sqlHandler database.SqlHandler) *TsundokuController {
 
 func (controller *TsundokuController) CreateTsundoku(c echo.Context, userID int) {
 	tsundoku := domain.Tsundoku{}
-	c.Bind(&tsundoku)
+        t, _ := time.Parse("2006-01-02", c.FormValue("deadline"))
+        c.Bind(&tsundoku)
+        tsundoku.Deadline = t
 	tsundoku.UserID = userID
 	controller.Interactor.Add(tsundoku)
 	createdTsundokus := controller.Interactor.GetInfo(userID)
