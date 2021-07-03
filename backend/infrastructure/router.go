@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -46,16 +47,38 @@ func Init() {
 	// ユーザー削除
 	e.DELETE("/api/users/:id", func(c echo.Context) error {
 		id := c.Param("id")
-		userController.Delete(id)
+		// intに変換
+		userID, err := strconv.Atoi(id)
+		if err != nil {
+			fmt.Println(err)
+		}
+		userController.Delete(userID)
 		return c.String(http.StatusOK, "deleted")
 	})
 
 	// 積読全取得
 	e.GET("api/users/:userID/tsundokus", func(c echo.Context) error {
-		userID := c.Param("userID")
+		str_userID := c.Param("userID")
+		// intに変換
+		userID, err := strconv.Atoi(str_userID)
+		if err != nil {
+			fmt.Println(err)
+		}
 		tsundokus := tsundokuController.GetTsundoku(userID)
 		c.Bind(&tsundokus)
 		return c.JSON(http.StatusOK, tsundokus)
+	})
+
+	// 積読追加
+	e.POST("api/users/:userID/tsundokus", func(c echo.Context) error {
+		str_userID := c.Param("userID")
+		// intに変換
+		userID, err := strconv.Atoi(str_userID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		tsundokuController.CreateTsundoku(c, userID)
+		return c.String(http.StatusOK, "created tsundoku")
 	})
 
 	port := os.Getenv("PORT")

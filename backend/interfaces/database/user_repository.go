@@ -17,7 +17,7 @@ func (db *UserRepository) Select() []domain.User {
 	db.FindAll(&user)
 	return user
 }
-func (db *UserRepository) Delete(id string) {
+func (db *UserRepository) Delete(id int) {
 	user := []domain.User{}
 	db.DeleteById(&user, id)
 }

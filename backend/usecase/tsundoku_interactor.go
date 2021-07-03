@@ -10,10 +10,10 @@ func (interactor *TsundokuInteractor) Add(tusndoku domain.Tsundoku) {
 	interactor.TsundokuRepository.Store(tusndoku)
 }
 
-func (interactor *TsundokuInteractor) GetInfo(userID string) []domain.Tsundoku {
+func (interactor *TsundokuInteractor) GetInfo(userID int) []domain.Tsundoku {
 	return interactor.TsundokuRepository.Select(userID)
 }
 
-func (interactor *TsundokuInteractor) Delete(id string) {
+func (interactor *TsundokuInteractor) Delete(id int) {
 	interactor.TsundokuRepository.Delete(id)
 }
