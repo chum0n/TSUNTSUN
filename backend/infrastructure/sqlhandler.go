@@ -10,10 +10,13 @@ type SqlHandler struct {
 }
 
 func NewSqlHandler() database.SqlHandler {
-	db, err := gorm.Open("postgres", "user=daisuke dbname=TSUNTSUN password=daisuke sslmode=disable")
+	DBMS := "postgres"
+	USER := "daisuke"
+	db, err := gorm.Open(DBMS, "user="+USER+" dbname=TSUNTSUN password=daisuke sslmode=disable")
 	if err != nil {
 		panic(err.Error())
 	}
+	db.LogMode(true)
 	sqlHandler := new(SqlHandler)
 	sqlHandler.db = db
 	return sqlHandler

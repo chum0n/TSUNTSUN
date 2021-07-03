@@ -12,8 +12,6 @@ import (
 
 func Init() {
 	e := echo.New()
-	// e.HideBanner = true
-	// e.HidePort = true
 	userController := controllers.NewUserController(NewSqlHandler())
 
 	// Middleware
@@ -33,7 +31,6 @@ func Init() {
 	e.GET("/api/users", func(c echo.Context) error {
 		fmt.Println("aa")
 		users := userController.GetUser()
-		fmt.Println("これは", users)
 		c.Bind(&users)
 		return c.JSON(http.StatusOK, users)
 	})

@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/labstack/echo"
 	"github.com/yot-sailing/TSUNTSUN/domain"
 	"github.com/yot-sailing/TSUNTSUN/interfaces/database"
@@ -34,7 +32,6 @@ func (controller *UserController) Create(c echo.Context) {
 
 func (controller *UserController) GetUser() []domain.User {
 	res := controller.Interactor.GetInfo()
-	fmt.Println("resは", res)
 	return res
 }
 

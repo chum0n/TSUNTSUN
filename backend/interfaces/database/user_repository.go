@@ -12,6 +12,7 @@ type UserRepository struct {
 
 func (db *UserRepository) Store(u domain.User) {
 	db.Create(&u)
+	fmt.Println("repositoryのstoreは", u)
 }
 
 func (db *UserRepository) Select() []domain.User {
