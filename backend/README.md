@@ -15,6 +15,9 @@
 3. そのためにもう一個下のusecaseのinteracterを使う
 4. そのために同階層でリポジトリ層を定義する
 5. コントローラー作るのにinteracterのリポジトリを考えないといけないから、interfaceのrepositoryを定義
+
+## メモ
+コントローラー同士で呼びあったらあかん
 ## 参考
 アーキテクチャ  
 https://qiita.com/mIchino/items/b885de3396e3f77d8b37

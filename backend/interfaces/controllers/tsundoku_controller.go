@@ -36,8 +36,8 @@ func (controller *TsundokuController) CreateTsundoku(c echo.Context, userID int)
 }
 
 func (controller *TsundokuController) GetTsundoku(userID int) []domain.Tsundoku {
-	res := controller.Interactor.GetInfo(userID)
-	return res
+	tsundokus := controller.Interactor.GetInfo(userID)
+	return tsundokus
 }
 
 func (controller *TsundokuController) Delete(id int) {
