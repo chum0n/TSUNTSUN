@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-      	"strconv"
+	"strconv"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -13,7 +13,7 @@ import (
 
 func Init() {
 	e := echo.New()
-        e.Use(middleware.CORS())
+	e.Use(middleware.CORS())
 	userController := controllers.NewUserController(NewSqlHandler())
 	tsundokuController := controllers.NewTsundokuController(NewSqlHandler())
 
