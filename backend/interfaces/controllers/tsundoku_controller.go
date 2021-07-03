@@ -21,20 +21,20 @@ func NewTsundokuController(sqlHandler database.SqlHandler) *TsundokuController {
 	}
 }
 
-func (controller *TsundokuController) Create(c echo.Context, userID string) {
+func (controller *TsundokuController) CreateTsundoku(c echo.Context, userID int) {
 	tsundoku := domain.Tsundoku{}
 	c.Bind(&tsundoku)
-	controller.Interactor.Add(tsundoku)
+	controller.Interactor.Add(tsundoku, userID)
 	createdTsundokus := controller.Interactor.GetInfo(userID)
 	c.JSON(201, createdTsundokus)
 	return
 }
 
-func (controller *TsundokuController) GetTsundoku(userID string) []domain.Tsundoku {
+func (controller *TsundokuController) GetTsundoku(userID int) []domain.Tsundoku {
 	res := controller.Interactor.GetInfo(userID)
 	return res
 }
 
-func (controller *TsundokuController) Delete(id string) {
+func (controller *TsundokuController) Delete(id int) {
 	controller.Interactor.Delete(id)
 }
