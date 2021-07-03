@@ -1,0 +1,44 @@
+<html lang="jp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="./jquery-3.6.0.min.js"></script>
+    <script src="./index.js"></script>
+    <link href="/index.css" rel="stylesheet">
+    <style>
+      body {
+        width: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="add-view">
+        <h1>積んサイトを追加する</h1>
+        <div>
+            <span>タイトル　</span>
+            <input type="text" id="title" disabled></input>
+        </div>
+        <div class="tag-area">
+            <span>タグ　</span>
+        </div>
+        <div class="tag-add-area">
+            <div>
+                <span>新規追加</span>
+                <input type="text" id="new-tag"></input>
+                <button class="add">+</button>
+            </div>
+            <div>
+                <span>今までのタグ</span>
+                <button class="tag old-tag" value="タグ">タグ</button>
+            </div>
+        </div>
+        <div class="button-wrap">
+            <button class="save">保存</button>
+        </div>
+    </div>
+    <div class="done-view" style="display: none;">
+        <span class="done">完了！</span>
+    </div>
+  </body>
+</html>
