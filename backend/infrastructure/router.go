@@ -109,6 +109,25 @@ func Init() {
 		return c.String(http.StatusOK, "deleted tsundoku")
 	})
 
+	// ある時間以内に読める本を取得
+	e.GET("api/users/:userID/time/:time", func(c echo.Context) error {
+		str_userID := c.Param("userID")
+		// intに変換
+		userID, err := strconv.Atoi(str_userID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		str_free_time := c.Param("time")
+		str_hour := str_free_time[:2]
+		str_min := str_free_time[2:]
+		hour, _ := strconv.Atoi(str_hour)
+		min, _ := strconv.Atoi(str_min)
+		free_time := hour*60 + min
+		tsundokus := tsundokuController.GetFreeTsundoku(c, userID, free_time)
+		c.Bind(&tsundokus)
+		return c.JSON(http.StatusOK, tsundokus)
+	})
+
 	// ユーザーが管理するタグ全取得
 	e.GET("api/users/:userID/tags", func(c echo.Context) error {
 		str_userID := c.Param("userID")

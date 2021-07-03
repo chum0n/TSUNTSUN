@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo"
@@ -33,6 +35,21 @@ func (controller *TsundokuController) CreateTsundoku(c echo.Context, userID int)
 	createdTsundokus := controller.Interactor.GetInfo(userID)
 	c.JSON(201, createdTsundokus)
 	return
+}
+
+func (controller *TsundokuController) GetFreeTsundoku(c echo.Context, userID int, free_time int) []domain.Tsundoku {
+	res := controller.Interactor.GetInfo(userID)
+	results := []domain.Tsundoku{}
+	for _, element := range res {
+		if element.Category == "site" {
+			need_time := strings.Replace(element.RequiredTime, "min", "", -1)
+			required_time, _ := strconv.Atoi(need_time)
+			if free_time >= required_time {
+				results = append(results, element)
+			}
+		}
+	}
+	return results
 }
 
 func (controller *TsundokuController) GetTsundoku(userID int) []domain.Tsundoku {
