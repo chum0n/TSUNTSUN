@@ -26,13 +26,8 @@ func (controller *TagController) CreateTag(c echo.Context, userID int) int {
 	c.Bind(&tag)
 	tagID := controller.Interactor.Add(tag)
 
-	// ユーザーの管理下のタグを取得
-	var tsundokuTagController *TsundokuTagController
-	tsundokuTags := tsundokuTagController.GetTsundokuTags(userID)
 	var tagIDs []int
-	for _, tsundokuTag := range tsundokuTags {
-		tagIDs = append(tagIDs, tsundokuTag.TagID)
-	}
+	tagIDs = append(tagIDs, tagID)
 	tags := controller.GetTags(tagIDs)
 
 	c.JSON(201, tags)
