@@ -6,20 +6,20 @@ import SearchArea from "../component/searchArea";
 
 function Main() {
   return (
-    <div className="main">
-      <Body>
+    <Body>
+      <div className="main">
         <Recommend></Recommend>
         <AddButton></AddButton>
         <SearchArea></SearchArea>
         <ResultArea></ResultArea>
-      </Body>
-    </div>
+      </div>
+    </Body>
   );
 }
 
 export default Main;
 
-const Body = styled.body`
+const Body = styled.div`
   width: 80%;
   margin: 0 auto;
 `;

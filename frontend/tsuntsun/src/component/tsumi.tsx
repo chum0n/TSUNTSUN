@@ -37,7 +37,7 @@ const Title = styled.h3`
 const Article = styled.article`
   display: flex;
   align-items: center;
-  max-width: 800px;
+  max-width: 700px;
   margin: 20px auto;
   padding: 20px 0;
   border-bottom: 0.5px solid #b9b9b9;
