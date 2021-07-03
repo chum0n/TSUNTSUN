@@ -117,13 +117,8 @@ func Init() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		str_free_time := c.Param("time")
-		str_hour := str_free_time[:2]
-		str_min := str_free_time[2:]
-		hour, _ := strconv.Atoi(str_hour)
-		min, _ := strconv.Atoi(str_min)
-		free_time := hour*60 + min
-		tsundokus := tsundokuController.GetFreeTsundoku(c, userID, free_time)
+		total_min, _ := strconv.Atoi(c.Param("time"))
+		tsundokus := tsundokuController.GetFreeTsundoku(c, userID, total_min)
 		c.Bind(&tsundokus)
 		return c.JSON(http.StatusOK, tsundokus)
 	})
