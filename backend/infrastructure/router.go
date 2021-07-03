@@ -13,6 +13,7 @@ import (
 func Init() {
 	e := echo.New()
 	userController := controllers.NewUserController(NewSqlHandler())
+	tsundokuController := controllers.NewTsundokuController(NewSqlHandler())
 
 	// Middleware
 	logger := middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -28,6 +29,7 @@ func Init() {
 		return c.String(http.StatusOK, "This is test!")
 	})
 
+	// ユーザー全取得
 	e.GET("/api/users", func(c echo.Context) error {
 		fmt.Println("aa")
 		users := userController.GetUser()
@@ -35,19 +37,30 @@ func Init() {
 		return c.JSON(http.StatusOK, users)
 	})
 
+	// ユーザー作成
 	e.POST("/api/users", func(c echo.Context) error {
 		userController.Create(c)
 		return c.String(http.StatusOK, "created")
 	})
 
+	// ユーザー削除
 	e.DELETE("/api/users/:id", func(c echo.Context) error {
 		id := c.Param("id")
 		userController.Delete(id)
 		return c.String(http.StatusOK, "deleted")
 	})
-        port := os.Getenv("PORT")
+
+	// 積読全取得
+	e.GET("api/users/:userID/tsundokus", func(c echo.Context) error {
+		userID := c.Param("userID")
+		tsundokus := tsundokuController.GetTsundoku(userID)
+		c.Bind(&tsundokus)
+		return c.JSON(http.StatusOK, tsundokus)
+	})
+
+	port := os.Getenv("PORT")
 	// start server
-	e.Logger.Fatal(e.Start(":"+port))
+	e.Logger.Fatal(e.Start(":" + port))
 }
 
 func logFormat() string {
