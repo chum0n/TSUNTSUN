@@ -58,8 +58,9 @@ func Init() {
 		return c.JSON(http.StatusOK, tsundokus)
 	})
 
+	port := os.Getenv("PORT")
 	// start server
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":" + port))
 }
 
 func logFormat() string {

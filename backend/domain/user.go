@@ -7,7 +7,7 @@ import (
 type User struct {
 	ID        int       `gorm:"primary_key" json:"id"`
 	Name      string    `gorm:"not null" json:"name"`
-	Token     string    `json:"token"`
+	LINEID    string    `json:"lineID"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }

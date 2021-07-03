@@ -17,12 +17,10 @@ func NewSqlHandler() database.SqlHandler {
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Println("envファイルが見当たりません")
-		panic(err.Error())
 	}
 
 	DBMS := os.Getenv("SQL_DBMS")
-	connection := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", os.Getenv("SQL_USERNAME"), os.Getenv("SQL_DBNAME"), os.Getenv("SQL_PASSWORD"))
-	db, err := gorm.Open(DBMS, connection)
+	db, err := gorm.Open(DBMS, os.Getenv("DATABASE_URL"))
 	if err != nil {
 		panic(err.Error())
 	}
