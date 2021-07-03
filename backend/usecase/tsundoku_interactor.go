@@ -7,7 +7,7 @@ type TsundokuInteractor struct {
 }
 
 func (interactor *TsundokuInteractor) Add(tusndoku domain.Tsundoku) {
-	interactor.TsundokuRepository.Store(tusndoku, userID)
+	interactor.TsundokuRepository.Store(tusndoku)
 }
 
 func (interactor *TsundokuInteractor) GetInfo(userID int) []domain.Tsundoku {

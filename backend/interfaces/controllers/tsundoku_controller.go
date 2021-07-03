@@ -24,7 +24,8 @@ func NewTsundokuController(sqlHandler database.SqlHandler) *TsundokuController {
 func (controller *TsundokuController) CreateTsundoku(c echo.Context, userID int) {
 	tsundoku := domain.Tsundoku{}
 	c.Bind(&tsundoku)
-	controller.Interactor.Add(tsundoku, userID)
+	tsundoku.UserID = userID
+	controller.Interactor.Add(tsundoku)
 	createdTsundokus := controller.Interactor.GetInfo(userID)
 	c.JSON(201, createdTsundokus)
 	return
