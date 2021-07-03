@@ -17,7 +17,6 @@ func NewSqlHandler() database.SqlHandler {
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Println("envファイルが見当たりません")
-		panic(err.Error())
 	}
 
 	DBMS := os.Getenv("SQL_DBMS")
