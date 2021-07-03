@@ -1,6 +1,8 @@
 package domain
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	ID        int       `gorm:"primary_key" json:"id"`
@@ -8,5 +10,4 @@ type User struct {
 	Token     string    `json:"token"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
-	DeletedAt time.Time `json:"deletedAt"`
 }
