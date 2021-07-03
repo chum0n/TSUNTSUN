@@ -13,6 +13,7 @@ import (
 
 func Init() {
 	e := echo.New()
+        e.Use(middleware.CORS())
 	userController := controllers.NewUserController(NewSqlHandler())
 	tsundokuController := controllers.NewTsundokuController(NewSqlHandler())
 
