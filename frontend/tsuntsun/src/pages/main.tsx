@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import AddButton from "../component/addButton";
+import Header from "../component/header";
 import Recommend from "../component/recommend";
 import ResultArea from "../component/resultArea";
 import SearchArea from "../component/searchArea";
@@ -11,6 +12,7 @@ function Main() {
   const location = useLocation();
   const search = location.search;
   const query = new URLSearchParams(search);
+  const [name, setName] = useState();
 
   useEffect(() => {
     const code = query.get("code");
@@ -43,22 +45,27 @@ function Main() {
             bodyFormData
           )
           .then((res) => {
+            setName(res.data.name);
             console.log(res);
           });
       })
       .catch((error) => {
         console.log(error);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Body>
-      <div className="main">
-        <Recommend></Recommend>
-        <AddButton></AddButton>
-        <SearchArea></SearchArea>
-        <ResultArea></ResultArea>
-      </div>
-    </Body>
+    <>
+      <Header name={name}></Header>
+      <Body>
+        <div className="main">
+          <Recommend></Recommend>
+          <AddButton></AddButton>
+          <SearchArea></SearchArea>
+          <ResultArea></ResultArea>
+        </div>
+      </Body>
+    </>
   );
 }
 

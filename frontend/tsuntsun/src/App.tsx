@@ -1,6 +1,5 @@
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Header from "./component/header";
 import Main from "./pages/main";
 import Login from "./pages/login";
 import AfterLogin from "./pages/afterLogin";
@@ -17,7 +16,6 @@ function App() {
             <AfterLogin />
           </Route>
           <Route path="/">
-            <Header></Header>
             <Main></Main>
           </Route>
         </Switch>
