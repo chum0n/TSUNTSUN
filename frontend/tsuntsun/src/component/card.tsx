@@ -5,9 +5,8 @@ import Tsumi, { TsumiObject } from "./tsumi";
 const Card: React.FC<{
   name: string;
   tsumis: TsumiObject[];
-  isHist?: boolean;
   deleteFunc: (id: number) => void;
-}> = ({ name, tsumis, deleteFunc, isHist = false }) => {
+}> = ({ name, tsumis, deleteFunc }) => {
   const [page, setPage] = useState<number>(1);
   const [isLastPage, setIsLastPage] = useState<boolean>(tsumis.length <= 10);
 
@@ -25,12 +24,7 @@ const Card: React.FC<{
             <NumBig>{tsumis.length}</NumBig>件
           </div>
           {tsumis.map((tsumi) => (
-            <Tsumi
-              key={tsumi.id}
-              {...tsumi}
-              deleteFunc={deleteFunc}
-              isHist={isHist}
-            ></Tsumi>
+            <Tsumi key={tsumi.id} {...tsumi} deleteFunc={deleteFunc}></Tsumi>
           ))}
           <div>
             {page !== 1 && (

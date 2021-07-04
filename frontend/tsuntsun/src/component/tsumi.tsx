@@ -67,9 +67,7 @@ const bubbles = new mojs.Burst({
   },
 });
 
-const Tsumi: React.FC<
-  TsumiObject & { deleteFunc: (id: number) => void; isHist: boolean }
-> = ({
+const Tsumi: React.FC<TsumiObject & { deleteFunc: (id: number) => void }> = ({
   id,
   url,
   title,
@@ -78,7 +76,6 @@ const Tsumi: React.FC<
   deadline,
   tags,
   deleteFunc,
-  isHist,
 }) => {
   const today = new Date();
   return (
@@ -137,13 +134,11 @@ const Tsumi: React.FC<
       <Button
         onClick={(e) => {
           deleteFunc(id);
-          if (!isHist) {
-            burst.tune({ x: e.pageX, y: e.pageY }).generate().replay();
-            bubbles.tune({ x: e.pageX, y: e.pageY }).generate().replay();
-          }
+          burst.tune({ x: e.pageX, y: e.pageY }).generate().replay();
+          bubbles.tune({ x: e.pageX, y: e.pageY }).generate().replay();
         }}
       >
-        {isHist ? "戻す" : "読んだ"}
+        読んだ
       </Button>
     </Article>
   );

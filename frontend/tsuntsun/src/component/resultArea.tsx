@@ -12,7 +12,6 @@ function ResultArea() {
   const [mainSlider, setMainSlider] = useState<Slider>();
   const [index, setIndex] = useState<number>(0);
   const [tsumis, setTsumis] = useState<TsumiObject[]>([]);
-  const [deleteTsumis, setDeleteTsumis] = useState<TsumiObject[]>([]);
   const [tags, setTags] = useState<TagObject[]>([]);
   const [tsumisByTag, setTsumisByTag] = useState<TsumiObject[][]>([]);
 
@@ -71,14 +70,10 @@ function ResultArea() {
   }, [tsumis]);
 
   const deleteFunc = (id: number) => {
-    const willDelete = tsumis.find((t) => t.id === id);
-    if (willDelete) {
-      setDeleteTsumis((prev) => [...prev, willDelete]);
-      setTsumis((prev) => {
-        return prev.filter((t) => t.id !== id);
-      });
-      console.log(tsumis);
-    }
+    setTsumis((prev) => {
+      return prev.filter((t) => t.id !== id);
+    });
+    console.log(tsumis);
   };
 
   return (
@@ -141,8 +136,7 @@ function ResultArea() {
         <Card
           name="Hist"
           key="Hist-default"
-          isHist={true}
-          tsumis={deleteTsumis}
+          tsumis={[]}
           deleteFunc={deleteFunc}
         ></Card>
       </Slider>
