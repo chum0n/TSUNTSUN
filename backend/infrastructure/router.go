@@ -41,7 +41,7 @@ func Init() {
 
 	// LINE
 	// ログイン
-	e.GET("/api/line_login", func(c echo.Context) error {
+	e.POST("/api/line_login", func(c echo.Context) error {
 		idToken := c.FormValue("id_token")
 		accessToken := c.FormValue("access_token")
 
@@ -100,7 +100,7 @@ func Init() {
 	})
 
 	// ログアウト
-	e.GET("line_logout", func(c echo.Context) error {
+	e.POST("line_logout", func(c echo.Context) error {
 		accessToken := c.FormValue("access_token")
 
 		revokeRequestBody := &body.RevokeRequestBody{
