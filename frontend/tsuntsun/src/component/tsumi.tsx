@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import Button from "./button";
 import Tag from "./tag";
-const mojs = require("@mojs/core");
 
 export type TsumiObject = {
   author: string;
@@ -20,104 +19,54 @@ export type TagObject = {
   name: string;
 };
 
-const burst = new mojs.Burst({
-  left: 0,
-  top: 0,
-  radius: { 0: 30 },
-  angle: "rand(0, 360)",
-  children: {
-    shape: "line",
-    stroke: "black",
-    fill: "none",
-    scale: 1,
-    scaleX: { 1: 0 },
-    easing: "cubic.out",
-    duration: 1000,
-  },
-});
-
-const bubbles = new mojs.Burst({
-  left: 0,
-  top: 0,
-  radius: { 100: 200 },
-  count: 40,
-  timeline: { delay: 100 },
-  children: {
-    fill: [
-      { "#DC93CF": "#E3D36B" },
-      { "#91D3F7": "#9AE4CF" },
-      { "#DC93CF": "#E3D36B" },
-      { "#CF8EEF": "#CBEB98" },
-      { "#F48BA2": "#CF8EEF" },
-      { "#A7ECD0": "#9AE4CF" },
-      { "#87E9C6": "#F48BA2" },
-      { "#D58EB3": "#E0B6F5" },
-      { "#F48BA2": "#F48BA2" },
-      { "#91D3F7": "#A635D9" },
-      { "#CF8EEF": "#CBEB98" },
-      { "#87E9C6": "#F48BA2" },
-    ],
-    scale: { 1: 0, easing: "quad.in" },
-    pathScale: [0.8, null],
-    duration: [500, 700],
-    easing: "quint.out",
-    radius: { 0: "rand(6, 10)" },
-    degreeShift: "rand(-50, 50)",
-    delay: "rand(0, 250)",
-  },
-});
-
-const Tsumi: React.FC<TsumiObject & { deleteFunc: (id: number) => void }> = ({
-  id,
-  url,
-  title,
-  createdAt,
-  requiredTime,
-  deadline,
-  tags,
-  deleteFunc,
-}) => {
+const Tsumi: React.FC<TsumiObject> = (tsumi) => {
   const today = new Date();
+  console.log(
+    today.getTime(),
+    Date.parse(tsumi.createdAt ? tsumi.createdAt : "")
+  );
   return (
-    <Article key={id}>
+    <Article key={tsumi.id}>
       <ContentWrap>
-        <Title>{url ? title : <a href={url}>{title}</a>}</Title>
+        <Title>
+          {tsumi.url ? tsumi.title : <a href={tsumi.url}>{tsumi.title}</a>}
+        </Title>
         <StatusBlack>
           <Status>
             <NumBig>
-              {createdAt &&
+              {tsumi.createdAt &&
                 Math.floor(
-                  (today.getTime() - Date.parse(createdAt)) / 86400000
+                  (today.getTime() - Date.parse(tsumi.createdAt)) / 86400000
                 )}
             </NumBig>
             日経過
           </Status>
           <Status>
-            {requiredTime && (
+            {tsumi.requiredTime && (
               <>
-                <NumBig>{requiredTime}</NumBig>
+                <NumBig>{tsumi.requiredTime}</NumBig>
                 で読める
               </>
             )}
           </Status>
           <Status>
-            {deadline ? (
+            {tsumi.deadline ? (
               <>
                 {Math.floor(
-                  (Date.parse(deadline) - today.getTime()) / 86400000
+                  (Date.parse(tsumi.deadline) - today.getTime()) / 86400000
                 ) >= 0
                   ? "あと"
                   : ""}
                 <NumBig>
                   {Math.abs(
                     Math.floor(
-                      (Date.parse(deadline) - today.getTime()) / 86400000
+                      (Date.parse(tsumi.deadline) - today.getTime()) / 86400000
                     )
                   )}
                 </NumBig>
                 日
                 {Math.floor(
-                  (Date.parse(deadline) - today.getTime()) / 86400000
+                  (Date.parse(tsumi.deadline) - today.getTime()) / 86400000
                 ) < 0
                   ? "経過"
                   : ""}
@@ -126,20 +75,12 @@ const Tsumi: React.FC<TsumiObject & { deleteFunc: (id: number) => void }> = ({
           </Status>
         </StatusBlack>
         <StatusBlack>
-          {tags.map((t) => (
+          {tsumi.tags.map((t) => (
             <Tag key={t.id} name={t.name}></Tag>
           ))}
         </StatusBlack>
       </ContentWrap>
-      <Button
-        onClick={(e) => {
-          deleteFunc(id);
-          burst.tune({ x: e.pageX, y: e.pageY }).generate().replay();
-          bubbles.tune({ x: e.pageX, y: e.pageY }).generate().replay();
-        }}
-      >
-        読んだ
-      </Button>
+      <Button>読んだ</Button>
     </Article>
   );
 };

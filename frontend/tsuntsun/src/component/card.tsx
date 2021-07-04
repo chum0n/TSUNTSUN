@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Tsumi, { TsumiObject } from "./tsumi";
 
-const Card: React.FC<{
-  name: string;
-  tsumis: TsumiObject[];
-  deleteFunc: (id: number) => void;
-}> = ({ name, tsumis, deleteFunc }) => {
+const Card: React.FC<{ name: string; tsumis: TsumiObject[] }> = ({
+  name,
+  tsumis,
+}) => {
   const [page, setPage] = useState<number>(1);
   const [isLastPage, setIsLastPage] = useState<boolean>(tsumis.length <= 10);
 
@@ -14,6 +13,10 @@ const Card: React.FC<{
     setIsLastPage(page * 10 > tsumis.length);
   }, [page, tsumis]);
 
+  const list: JSX.Element[] = [];
+  tsumis.forEach((tsumi) => {
+    list.push(<Tsumi key={tsumi.id} {...tsumi}></Tsumi>);
+  });
   return (
     <div>
       <h2>{name}</h2>
@@ -23,9 +26,7 @@ const Card: React.FC<{
             {isLastPage ? tsumis.length : page * 10}/
             <NumBig>{tsumis.length}</NumBig>件
           </div>
-          {tsumis.map((tsumi) => (
-            <Tsumi key={tsumi.id} {...tsumi} deleteFunc={deleteFunc}></Tsumi>
-          ))}
+          {list}
           <div>
             {page !== 1 && (
               <PagenationButton onClick={() => setPage((p) => p - 1)}>

@@ -44,37 +44,29 @@ function ResultArea() {
       .get("https://tsuntsun-api.herokuapp.com/api/users/1/tsundokus")
       .then((res) => {
         setTsumis(res.data);
+        // タグ一覧
+        const allTags: TagObject[] = res.data
+          .map((element: TsumiObject) => {
+            return element.tags;
+          })
+          .flat()
+          .reduce((a: TagObject[], v: TagObject) => {
+            if (v && !a.includes(v)) {
+              a.push(v);
+            }
+            return a;
+          }, []);
+        console.log(res.data, allTags);
+        setTags(allTags);
+        const tsumisFilterd = allTags.map((i) => {
+          return res.data.filter((tsumi: TsumiObject) =>
+            tsumi.tags.some((t) => t.id === i.id)
+          );
+        });
+        setTsumisByTag(tsumisFilterd);
+        console.log(tsumisFilterd);
       });
   }, []);
-
-  useEffect(() => {
-    // タグ一覧
-    const allTags: TagObject[] = tsumis
-      .map((element: TsumiObject) => {
-        return element.tags;
-      })
-      .flat()
-      .reduce((a: TagObject[], v: TagObject) => {
-        if (v && !a.includes(v)) {
-          a.push(v);
-        }
-        return a;
-      }, []);
-    setTags(allTags);
-    const tsumisFilterd = allTags.map((i) => {
-      return tsumis.filter((tsumi: TsumiObject) =>
-        tsumi.tags.some((t) => t.id === i.id)
-      );
-    });
-    setTsumisByTag(tsumisFilterd);
-  }, [tsumis]);
-
-  const deleteFunc = (id: number) => {
-    setTsumis((prev) => {
-      return prev.filter((t) => t.id !== id);
-    });
-    console.log(tsumis);
-  };
 
   return (
     <div className="result-area">
@@ -100,11 +92,11 @@ function ResultArea() {
             asNavFor={mainSlider}
             ref={(slider) => (slider ? setNav(slider) : null)}
           >
-            <Nav key="ALL-default">ALL</Nav>
+            <Nav>ALL</Nav>
             {tags.map((t) => (
-              <Nav key={t.id}>{t.name}</Nav>
+              <Nav>{t.name}</Nav>
             ))}
-            <Nav key="Hist-default">History</Nav>
+            <Nav>History</Nav>
           </Slider>
         </NavArea>
       </ResultTop>
@@ -116,12 +108,7 @@ function ResultArea() {
         ref={(slider) => (slider ? setMainSlider(slider) : null)}
         beforeChange={(oldIndex, newIndex) => setIndex(newIndex)}
       >
-        <Card
-          name="ALL"
-          key="ALL-default"
-          tsumis={tsumis}
-          deleteFunc={deleteFunc}
-        ></Card>
+        <Card name="ALL" tsumis={tsumis}></Card>
         {tags.map(
           (t, index) =>
             tsumisByTag[index] && (
@@ -129,16 +116,10 @@ function ResultArea() {
                 name={t.name}
                 key={index}
                 tsumis={tsumisByTag[index]}
-                deleteFunc={deleteFunc}
               ></Card>
             )
         )}
-        <Card
-          name="Hist"
-          key="Hist-default"
-          tsumis={[]}
-          deleteFunc={deleteFunc}
-        ></Card>
+        <Card name="Hist" tsumis={[]}></Card>
       </Slider>
     </div>
   );
