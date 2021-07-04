@@ -1,7 +1,10 @@
 package infrastructure
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -29,13 +32,98 @@ func Init() {
 
 	// 接続テスト
 	e.GET("/api/test", func(c echo.Context) error {
-		fmt.Println("aa")
 		return c.String(http.StatusOK, "This is test!")
+	})
+
+	// LINE
+	// ログイン
+	type VerifyRequestBody struct {
+		id_token  string
+		client_id string
+	}
+
+	e.GET("/api/line_login", func(c echo.Context) error {
+		idToken := c.FormValue("id_token")
+		accessToken := c.FormValue("access_token")
+
+		verifyRequestBody := &VerifyRequestBody{
+			id_token:  idToken,
+			client_id: os.Getenv("CHANNEL_ID"),
+		}
+
+		verifyJsonString, err := json.Marshal(verifyRequestBody)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		endpoint := "https://api.line.me/oauth2/v2.1/verify"
+		req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(verifyJsonString))
+		if err != nil {
+			fmt.Println(err)
+		}
+		req.Header.Set("Content-Type", "application/json")
+
+		client := new(http.Client)
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer resp.Body.Close()
+
+		byteArray, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Printf("%#v", string(byteArray))
+	})
+
+	// ログアウト
+	type RevokeRequestBody struct {
+		client_id      string
+		client_sercret string
+		access_token   string
+	}
+
+	e.GET("line_logout", func(c echo.Context) error {
+		accessToken := c.FormValue("access_token")
+
+		revokeRequestBody := &RevokeRequestBody{
+			client_id:      os.Getenv("CHANNEL_ID"),
+			client_sercret: os.Getenv("CHANNEL_SECRET"),
+			access_token:   accessToken,
+		}
+
+		revokeJsonString, err := json.Marshal(revokeRequestBody)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		endpoint := "https://api.line.me/oauth2/v2.1/revoke"
+		req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(revokeJsonString))
+		if err != nil {
+			fmt.Println(err)
+		}
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		client := new(http.Client)
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer resp.Body.Close()
+
+		// // 成功していたら空
+		// byteArray, err := ioutil.ReadAll(resp.Body)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+
+		return c.String(resp.StatusCode, "created")
 	})
 
 	// ユーザー全取得
 	e.GET("/api/users", func(c echo.Context) error {
-		fmt.Println("aa")
 		users := userController.GetUser()
 		c.Bind(&users)
 		return c.JSON(http.StatusOK, users)
