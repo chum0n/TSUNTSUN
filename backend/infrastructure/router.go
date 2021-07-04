@@ -62,6 +62,8 @@ func Init() {
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Println("router.goのverifyReqBody", verifyRequestBody)
+		fmt.Println("router.goのverifyJSON", verifyJsonString)
 
 		endpoint := "https://api.line.me/oauth2/v2.1/verify"
 		req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(verifyJsonString))
@@ -77,6 +79,7 @@ func Init() {
 		}
 		defer resp.Body.Close()
 
+		fmt.Println("router.goのresp", resp)
 		byteArray, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			fmt.Println(err)
@@ -87,6 +90,7 @@ func Init() {
 			fmt.Println(err)
 		}
 
+		fmt.Println("router.goのuserLine", verifyResponseBody)
 		// 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
 		user := userController.PrepareUser(verifyResponseBody)
 		userExcludeLine := body.UesrExcludeLine{

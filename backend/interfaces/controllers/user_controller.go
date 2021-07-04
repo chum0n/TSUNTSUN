@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/labstack/echo"
 	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/domain"
@@ -33,6 +35,7 @@ func (controller *UserController) Create(c echo.Context) {
 
 // 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
 func (controller *UserController) PrepareUser(userLine body.VerifyResponseBody) domain.User {
+	fmt.Println("controller層のuserLine", userLine)
 	user := controller.Interactor.Prepare(userLine)
 	return user
 }

@@ -57,6 +57,7 @@ func (handler *SqlHandler) FindObjByMultiIDs(obj interface{}, tsundokuID int, us
 }
 
 func (handler *SqlHandler) FindOrCreateUser(user *domain.User, newUser *domain.User, userLine body.VerifyResponseBody) int {
+	fmt.Println("infra層のuserLine", userLine)
 	lineUserID := userLine.Sub
 	result := handler.db.Where("line_id = ?", lineUserID).First(&user)
 	affect := result.RowsAffected
