@@ -11,9 +11,9 @@ func (db *TsundokuRepository) Store(tsundoku domain.Tsundoku) {
 }
 
 func (db *TsundokuRepository) Select(userID int) []domain.Tsundoku {
-	tsundoku := []domain.Tsundoku{}
-	db.FindAllUserItem(&tsundoku, userID)
-	return tsundoku
+	tsundokus := []domain.Tsundoku{}
+	db.FindAllUserItem(&tsundokus, userID)
+	return tsundokus
 }
 
 func (db *TsundokuRepository) Delete(id int) {

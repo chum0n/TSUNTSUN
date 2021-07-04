@@ -1,15 +1,41 @@
 import styled from "styled-components";
 
-function Header() {
+const Header: React.FC<{
+  name?: string;
+}> = ({ name }) => {
+  const logout = () => {
+    window.location.href = "https://tsuntsun.herokuapp.com/login";
+    // axios
+    //   .get("https://tsuntsun-api.herokuapp.com/api/line_logout")
+    //   .then((res) => {
+    //     console.log(res);
+    //     window.location.href = "https://tsuntsun.herokuapp.com/login";
+    //   })
+    //   .catch((res) => {
+    //     console.log(res);
+    //   });
+  };
   return (
     <HeaderBase className="header">
       <Logo href="." className="brand">
-        ロゴ TsunTsun
+        <img
+          src={`${process.env.PUBLIC_URL}/logo.png`}
+          alt=""
+          style={{ height: "40px" }}
+        ></img>
+        <img
+          src={`${process.env.PUBLIC_URL}/tsuntsun.png`}
+          alt=""
+          style={{ height: "40px" }}
+        ></img>
       </Logo>
-      <div>チュモンさん、こんにちは　設定 ログアウト</div>
+      <div>
+        {name ? name + "さん、こんにちは" : ""}　設定
+        <LogoutButton onClick={() => logout()}>ログアウト</LogoutButton>
+      </div>
     </HeaderBase>
   );
-}
+};
 
 export default Header;
 
@@ -23,4 +49,9 @@ const HeaderBase = styled.header`
 
 const Logo = styled.a`
   text-decoration: none;
+`;
+
+const LogoutButton = styled.button`
+  border: none;
+  background-color: transparent;
 `;
