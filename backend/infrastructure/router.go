@@ -17,7 +17,10 @@ import (
 
 func Init() {
 	e := echo.New()
-	e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
 	userController := controllers.NewUserController(NewSqlHandler())
 	tsundokuController := controllers.NewTsundokuController(NewSqlHandler())
 	tagController := controllers.NewTagController(NewSqlHandler())
@@ -207,6 +210,20 @@ func Init() {
 		}
 		tsundokuController.Delete(tsundokuID)
 		return c.String(http.StatusOK, "deleted tsundoku")
+	})
+
+	// ある時間以内に読める本を取得
+	e.GET("api/users/:userID/time/:time", func(c echo.Context) error {
+		str_userID := c.Param("userID")
+		// intに変換
+		userID, err := strconv.Atoi(str_userID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		total_min, _ := strconv.Atoi(c.Param("time"))
+		tsundokus := tsundokuController.GetFreeTsundoku(c, userID, total_min)
+		c.Bind(&tsundokus)
+		return c.JSON(http.StatusOK, tsundokus)
 	})
 
 	// ユーザーが管理するタグ全取得

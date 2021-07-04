@@ -2,13 +2,19 @@ import Card from "./card";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { TagObject, TsumiObject } from "./tsumi";
 
 function ResultArea() {
   const [nav, setNav] = useState<Slider>();
   const [mainSlider, setMainSlider] = useState<Slider>();
   const [index, setIndex] = useState<number>(0);
+  const [tsumis, setTsumis] = useState<TsumiObject[]>([]);
+  const [deleteTsumis, setDeleteTsumis] = useState<TsumiObject[]>([]);
+  const [tags, setTags] = useState<TagObject[]>([]);
+  const [tsumisByTag, setTsumisByTag] = useState<TsumiObject[][]>([]);
 
   // スライダー用設定
   const settings = {
@@ -31,19 +37,63 @@ function ResultArea() {
     swipe: false,
     focusOnSelect: true,
     centerPadding: "10px",
-    slidesToShow: 5,
+    slidesToShow: tags.length >= 3 ? 5 : tags.length + 2,
   };
 
-  // 表示用、一時的
-  const nameTmp = ["ALL", "Web", "App", "JS", "Ruby", "History"];
+  useEffect(() => {
+    axios
+      .get("https://tsuntsun-api.herokuapp.com/api/users/1/tsundokus")
+      .then((res) => {
+        setTsumis(res.data);
+      });
+  }, []);
+
+  useEffect(() => {
+    // タグ一覧
+    const allTags: TagObject[] = tsumis
+      .map((element: TsumiObject) => {
+        return element.tags;
+      })
+      .flat()
+      .reduce((a: TagObject[], v: TagObject) => {
+        if (v && !a.includes(v)) {
+          a.push(v);
+        }
+        return a;
+      }, []);
+    setTags(allTags);
+    const tsumisFilterd = allTags.map((i) => {
+      return tsumis.filter((tsumi: TsumiObject) =>
+        tsumi.tags.some((t) => t.id === i.id)
+      );
+    });
+    setTsumisByTag(tsumisFilterd);
+  }, [tsumis]);
+
+  const deleteFunc = (id: number) => {
+    const willDelete = tsumis.find((t) => t.id === id);
+    if (willDelete) {
+      axios
+        .delete(
+          `https://tsuntsun-api.herokuapp.com/api/users/1/tsundokus/${id}`
+        )
+        .then((res) => {
+          setDeleteTsumis((prev) => [...prev, willDelete]);
+          setTsumis((prev) => {
+            return prev.filter((t) => t.id !== id);
+          });
+          console.log(tsumis);
+        });
+    }
+  };
 
   return (
     <div className="result-area">
       <ResultTop>
         <FixedNavArea>
           <Nav
-            className={index === nameTmp.length - 1 ? "current" : ""}
-            onClick={(e) => mainSlider?.slickGoTo(nameTmp.length - 1)}
+            className={index === tags.length + 1 ? "current" : ""}
+            onClick={(e) => mainSlider?.slickGoTo(tags.length + 1)}
           >
             History
           </Nav>
@@ -61,9 +111,11 @@ function ResultArea() {
             asNavFor={mainSlider}
             ref={(slider) => (slider ? setNav(slider) : null)}
           >
-            {nameTmp.map((i) => (
-              <Nav>{i}</Nav>
+            <Nav key="ALL-default">ALL</Nav>
+            {tags.map((t) => (
+              <Nav key={t.id}>{t.name}</Nav>
             ))}
+            <Nav key="Hist-default">History</Nav>
           </Slider>
         </NavArea>
       </ResultTop>
@@ -75,9 +127,30 @@ function ResultArea() {
         ref={(slider) => (slider ? setMainSlider(slider) : null)}
         beforeChange={(oldIndex, newIndex) => setIndex(newIndex)}
       >
-        {nameTmp.map((i) => (
-          <Card name={i}></Card>
-        ))}
+        <Card
+          name="ALL"
+          key="ALL-default"
+          tsumis={tsumis}
+          deleteFunc={deleteFunc}
+        ></Card>
+        {tags.map(
+          (t, index) =>
+            tsumisByTag[index] && (
+              <Card
+                name={t.name}
+                key={index}
+                tsumis={tsumisByTag[index]}
+                deleteFunc={deleteFunc}
+              ></Card>
+            )
+        )}
+        <Card
+          name="Hist"
+          key="Hist-default"
+          isHist={true}
+          tsumis={deleteTsumis}
+          deleteFunc={deleteFunc}
+        ></Card>
       </Slider>
     </div>
   );
