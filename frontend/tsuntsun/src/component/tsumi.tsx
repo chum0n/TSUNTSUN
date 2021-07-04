@@ -5,8 +5,8 @@ import Tag from "./tag";
 export type TsumiObject = {
   author: string;
   category: string;
-  createdAt?: string;
-  deadline?: string;
+  createdAt?: Date;
+  deadline?: Date;
   id: number;
   requiredTime: string;
   title: string;
@@ -20,64 +20,22 @@ export type TagObject = {
 };
 
 const Tsumi: React.FC<TsumiObject> = (tsumi) => {
-  const today = new Date();
-  console.log(
-    today.getTime(),
-    Date.parse(tsumi.createdAt ? tsumi.createdAt : "")
-  );
   return (
-    <Article key={tsumi.id}>
+    <Article>
       <ContentWrap>
-        <Title>
-          {tsumi.url ? tsumi.title : <a href={tsumi.url}>{tsumi.title}</a>}
-        </Title>
+        <Title>{tsumi.title}</Title>
         <StatusBlack>
           <Status>
-            <NumBig>
-              {tsumi.createdAt &&
-                Math.floor(
-                  (today.getTime() - Date.parse(tsumi.createdAt)) / 86400000
-                )}
-            </NumBig>
-            日経過
+            <NumBig>30</NumBig>日経過
           </Status>
           <Status>
-            {tsumi.requiredTime && (
-              <>
-                <NumBig>{tsumi.requiredTime}</NumBig>
-                で読める
-              </>
-            )}
-          </Status>
-          <Status>
-            {tsumi.deadline ? (
-              <>
-                {Math.floor(
-                  (Date.parse(tsumi.deadline) - today.getTime()) / 86400000
-                ) >= 0
-                  ? "あと"
-                  : ""}
-                <NumBig>
-                  {Math.abs(
-                    Math.floor(
-                      (Date.parse(tsumi.deadline) - today.getTime()) / 86400000
-                    )
-                  )}
-                </NumBig>
-                日
-                {Math.floor(
-                  (Date.parse(tsumi.deadline) - today.getTime()) / 86400000
-                ) < 0
-                  ? "経過"
-                  : ""}
-              </>
-            ) : null}
+            <NumBig>15</NumBig>分で読める
           </Status>
         </StatusBlack>
         <StatusBlack>
-          {tsumi.tags.map((t) => (
-            <Tag key={t.id} name={t.name}></Tag>
-          ))}
+          <Tag name="web"></Tag>
+          <Tag name="Javascript"></Tag>
+          <Tag name="TSUNTSUN"></Tag>
         </StatusBlack>
       </ContentWrap>
       <Button>読んだ</Button>
