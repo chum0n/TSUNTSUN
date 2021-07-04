@@ -1,13 +1,17 @@
 package infrastructure
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/interfaces/controllers"
 )
 
@@ -29,13 +33,109 @@ func Init() {
 
 	// 接続テスト
 	e.GET("/api/test", func(c echo.Context) error {
-		fmt.Println("aa")
 		return c.String(http.StatusOK, "This is test!")
+	})
+
+	// LINE
+	// ログイン
+	e.GET("/api/line_login", func(c echo.Context) error {
+		idToken := c.FormValue("id_token")
+		accessToken := c.FormValue("access_token")
+
+		// アクセストークンの有効性確認
+		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
+		if accessTokenStatus != 200 {
+			fmt.Println("アクセストークンが有効でありません。")
+			return c.JSON(accessTokenStatus, accessTokenResponse)
+		}
+
+		// LINEのユーザー情報を取得
+		verifyRequestBody := &body.VerifyRequestBody{
+			IDToken:  idToken,
+			ClientID: os.Getenv("CHANNEL_ID"),
+		}
+
+		verifyJsonString, err := json.Marshal(verifyRequestBody)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		endpoint := "https://api.line.me/oauth2/v2.1/verify"
+		req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(verifyJsonString))
+		if err != nil {
+			fmt.Println(err)
+		}
+		req.Header.Set("Content-Type", "application/json")
+
+		client := new(http.Client)
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer resp.Body.Close()
+
+		byteArray, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println(err)
+		}
+		var verifyResponseBody body.VerifyResponseBody
+		err = json.Unmarshal(byteArray, &verifyResponseBody)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		// 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
+		user := userController.PrepareUser(verifyResponseBody)
+		userExcludeLine := body.UesrExcludeLine{
+			ID:        user.ID,
+			Name:      user.Name,
+			CreatedAt: user.CreatedAt,
+			UpdatedAt: user.UpdatedAt,
+		}
+
+		return c.JSON(http.StatusOK, userExcludeLine)
+	})
+
+	// ログアウト
+	e.GET("line_logout", func(c echo.Context) error {
+		accessToken := c.FormValue("access_token")
+
+		revokeRequestBody := &body.RevokeRequestBody{
+			ClientID:      os.Getenv("CHANNEL_ID"),
+			ClientSercret: os.Getenv("CHANNEL_SECRET"),
+			AccessToken:   accessToken,
+		}
+
+		revokeJsonString, err := json.Marshal(revokeRequestBody)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		endpoint := "https://api.line.me/oauth2/v2.1/revoke"
+		req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(revokeJsonString))
+		if err != nil {
+			fmt.Println(err)
+		}
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		client := new(http.Client)
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer resp.Body.Close()
+
+		// // 成功していたら空
+		// byteArray, err := ioutil.ReadAll(resp.Body)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+
+		return c.String(resp.StatusCode, "logout")
 	})
 
 	// ユーザー全取得
 	e.GET("/api/users", func(c echo.Context) error {
-		fmt.Println("aa")
 		users := userController.GetUser()
 		c.Bind(&users)
 		return c.JSON(http.StatusOK, users)
