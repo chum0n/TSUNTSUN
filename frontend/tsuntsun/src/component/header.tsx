@@ -1,4 +1,3 @@
-import axios from "axios";
 import styled from "styled-components";
 
 const Header: React.FC<{
@@ -19,10 +18,19 @@ const Header: React.FC<{
   return (
     <HeaderBase className="header">
       <Logo href="." className="brand">
-        ロゴ TsunTsun
+        <img
+          src={`${process.env.PUBLIC_URL}/logo.png`}
+          alt=""
+          style={{ height: "40px" }}
+        ></img>
+        <img
+          src={`${process.env.PUBLIC_URL}/tsuntsun.png`}
+          alt=""
+          style={{ height: "40px" }}
+        ></img>
       </Logo>
       <div>
-        {name}さん、こんにちは　設定
+        {name ? name : "チュモン"}さん、こんにちは　設定
         <LogoutButton onClick={() => logout()}>ログアウト</LogoutButton>
       </div>
     </HeaderBase>
