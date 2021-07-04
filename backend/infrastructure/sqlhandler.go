@@ -56,14 +56,16 @@ func (handler *SqlHandler) FindObjByMultiIDs(obj interface{}, tsundokuID int, us
 	handler.db.Where("tsundoku_id=? AND user_id=?", tsundokuID, userID).Find(obj)
 }
 
-func (handler *SqlHandler) FindOrCreateUser(user *domain.User, userLine body.VerifyResponseBody) {
+func (handler *SqlHandler) FindOrCreateUser(user *domain.User, newUser *domain.User, userLine body.VerifyResponseBody) int {
 	lineUserID := userLine.Sub
 	result := handler.db.Where("line_id = ?", lineUserID).First(&user)
-	if result.RowsAffected == 0 {
-		user = &domain.User{
+	affect := result.RowsAffected
+	if affect == 0 {
+		newUser := domain.User{
 			Name:   userLine.Name,
 			LINEID: userLine.Sub,
 		}
-		handler.db.Create(&user)
+		handler.db.Create(&newUser)
 	}
+	return int(affect)
 }
