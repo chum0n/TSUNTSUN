@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 
@@ -65,17 +66,28 @@ func Init() {
 		fmt.Println("router.goのverifyReqBody", verifyRequestBody)
 		fmt.Println("router.goのverifyJSON", verifyJsonString)
 
-		endpoint := "https://api.line.me/oauth2/v2.1/verify"
-		req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(verifyJsonString))
-		if err != nil {
-			fmt.Println(err)
-		}
-		req.Header.Set("Content-Type", "application/json")
+		// endpoint := "https://api.line.me/oauth2/v2.1/verify"
+		// req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(verifyJsonString))
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+		// req.Header.Set("Content-Type", "application/json")
 
-		client := new(http.Client)
-		resp, err := client.Do(req)
+		// client := new(http.Client)
+		// resp, err := client.Do(req)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+		url_target := "https://api.line.me/oauth2/v2.1/verify"
+		args := url.Values{}
+		args.Add("id_token", idToken)
+		args.Add("client_id", os.Getenv("CHANNEL_ID"))
+		fmt.Println("id_token", idToken)
+		fmt.Println("client_id", os.Getenv("CHANNEL_ID"))
+		resp, err := http.PostForm(url_target, args)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Request error:", err)
+			return err
 		}
 		defer resp.Body.Close()
 
