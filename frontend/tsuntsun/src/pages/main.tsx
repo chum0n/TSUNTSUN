@@ -13,6 +13,13 @@ function Main() {
   const query = new URLSearchParams(search);
 
   useEffect(() => {
+    const code = query.get("code");
+    const params = new URLSearchParams();
+    params.append("grant_type", "authorization_code");
+    params.append("code", code ? code : "");
+    params.append("redirect_uri", "https://tsuntsun.herokuapp.com");
+    params.append("client_id", process.env.REACT_APP_CHANNEL_ID!);
+    params.append("client_secret", process.env.REACT_APP_CHANNEL_SECRET!);
     const data = {
       grant_type: "authorization_code",
       code: query.get("code") ? query.get("code") : "",
@@ -22,7 +29,7 @@ function Main() {
     };
     console.log(data);
     axios
-      .post("https://api.line.me/oauth2/v2.1/token", data, {
+      .post("https://api.line.me/oauth2/v2.1/token", params, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
@@ -38,6 +45,9 @@ function Main() {
           .then((res) => {
             console.log(res);
           });
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }, []);
   return (
