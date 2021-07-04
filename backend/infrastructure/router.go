@@ -11,6 +11,7 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/interfaces/controllers"
 )
 
@@ -37,24 +38,6 @@ func Init() {
 
 	// LINE
 	// ログイン
-	type VerifyRequestBody struct {
-		id_token  string
-		client_id string
-	}
-
-	type VerifyResponseBody struct {
-		iss     string
-		sub     string
-		aud     string
-		exp     int
-		iat     int
-		nonce   string
-		amr     []string
-		name    string
-		picture string
-		email   string
-	}
-
 	e.GET("/api/line_login", func(c echo.Context) error {
 		idToken := c.FormValue("id_token")
 		accessToken := c.FormValue("access_token")
@@ -66,10 +49,10 @@ func Init() {
 			return c.JSON(accessTokenStatus, accessTokenResponse)
 		}
 
-		// ユーザー情報を取得
-		verifyRequestBody := &VerifyRequestBody{
-			id_token:  idToken,
-			client_id: os.Getenv("CHANNEL_ID"),
+		// LINEのユーザー情報を取得
+		verifyRequestBody := &body.VerifyRequestBody{
+			IDToken:  idToken,
+			ClientID: os.Getenv("CHANNEL_ID"),
 		}
 
 		verifyJsonString, err := json.Marshal(verifyRequestBody)
@@ -95,15 +78,22 @@ func Init() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		var verifyResponseBody VerifyResponseBody
+		var verifyResponseBody body.VerifyResponseBody
 		err = json.Unmarshal(byteArray, &verifyResponseBody)
 		if err != nil {
 			fmt.Println(err)
 		}
 
 		// ユーザーがいなかったら作成
+		user := userController.PrepareUser(verifyResponseBody)
+		userExcludeLine := body.UesrExcludeLine{
+			ID:        user.ID,
+			Name:      user.Name,
+			CreatedAt: user.CreatedAt,
+			UpdatedAt: user.UpdatedAt,
+		}
 
-		return c.JSON(http.StatusOK, verifyResponseBody.name)
+		return c.JSON(http.StatusOK, userExcludeLine)
 	})
 
 	// ログアウト
@@ -147,7 +137,7 @@ func Init() {
 		// 	fmt.Println(err)
 		// }
 
-		return c.String(resp.StatusCode, "created")
+		return c.String(resp.StatusCode, "logout")
 	})
 
 	// ユーザー全取得

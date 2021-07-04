@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/labstack/echo"
+	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/domain"
 	"github.com/yot-sailing/TSUNTSUN/interfaces/database"
 	"github.com/yot-sailing/TSUNTSUN/usecase"
@@ -28,6 +29,12 @@ func (controller *UserController) Create(c echo.Context) {
 	createdUsers := controller.Interactor.GetInfo()
 	c.JSON(201, createdUsers)
 	return
+}
+
+// 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
+func (controller *UserController) PrepareUser(userLine body.VerifyResponseBody) domain.User {
+	user := controller.Interactor.Prepare(userLine)
+	return user
 }
 
 func (controller *UserController) GetUser() []domain.User {

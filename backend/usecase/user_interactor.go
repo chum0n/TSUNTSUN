@@ -1,6 +1,9 @@
 package usecase
 
-import "github.com/yot-sailing/TSUNTSUN/domain"
+import (
+	"github.com/yot-sailing/TSUNTSUN/body"
+	"github.com/yot-sailing/TSUNTSUN/domain"
+)
 
 type UserInteractor struct {
 	UserRepository UserRepository
@@ -8,6 +11,11 @@ type UserInteractor struct {
 
 func (interactor *UserInteractor) Add(u domain.User) {
 	interactor.UserRepository.Store(u)
+}
+
+func (interactor *UserInteractor) Prepare(userLine body.VerifyResponseBody) domain.User {
+	user := interactor.UserRepository.Prepare(userLine)
+	return user
 }
 
 func (interactor *UserInteractor) GetInfo() []domain.User {
