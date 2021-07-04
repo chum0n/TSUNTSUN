@@ -1,153 +1,32 @@
 import styled from "styled-components";
 import Button from "./button";
 import Tag from "./tag";
-const mojs = require("@mojs/core");
 
-export type TsumiObject = {
-  author: string;
-  category: string;
-  createdAt?: string;
-  deadline?: string;
-  id: number;
-  requiredTime: string;
-  title: string;
-  url: string;
-  tags: TagObject[];
-};
-
-export type TagObject = {
-  id: string;
-  name: string;
-};
-
-const burst = new mojs.Burst({
-  left: 0,
-  top: 0,
-  radius: { 0: 30 },
-  angle: "rand(0, 360)",
-  children: {
-    shape: "line",
-    stroke: "black",
-    fill: "none",
-    scale: 1,
-    scaleX: { 1: 0 },
-    easing: "cubic.out",
-    duration: 1000,
-  },
-});
-
-const bubbles = new mojs.Burst({
-  left: 0,
-  top: 0,
-  radius: { 100: 200 },
-  count: 40,
-  timeline: { delay: 100 },
-  children: {
-    fill: [
-      { "#DC93CF": "#E3D36B" },
-      { "#91D3F7": "#9AE4CF" },
-      { "#DC93CF": "#E3D36B" },
-      { "#CF8EEF": "#CBEB98" },
-      { "#F48BA2": "#CF8EEF" },
-      { "#A7ECD0": "#9AE4CF" },
-      { "#87E9C6": "#F48BA2" },
-      { "#D58EB3": "#E0B6F5" },
-      { "#F48BA2": "#F48BA2" },
-      { "#91D3F7": "#A635D9" },
-      { "#CF8EEF": "#CBEB98" },
-      { "#87E9C6": "#F48BA2" },
-    ],
-    scale: { 1: 0, easing: "quad.in" },
-    pathScale: [0.8, null],
-    duration: [500, 700],
-    easing: "quint.out",
-    radius: { 0: "rand(6, 10)" },
-    degreeShift: "rand(-50, 50)",
-    delay: "rand(0, 250)",
-  },
-});
-
-const Tsumi: React.FC<
-  TsumiObject & { deleteFunc: (id: number) => void; isHist: boolean }
-> = ({
-  id,
-  url,
-  title,
-  createdAt,
-  requiredTime,
-  deadline,
-  tags,
-  deleteFunc,
-  isHist,
-}) => {
-  const today = new Date();
+function Tsumi() {
   return (
-    <Article key={id}>
+    <Article>
       <ContentWrap>
-        <Title>{url === "" ? title : <a href={url}>{title}</a>}</Title>
+        <Title>
+          TSUNTSUNでサイトを積み始めたら、爆速で消化できるようになった話
+        </Title>
         <StatusBlack>
           <Status>
-            <NumBig>
-              {createdAt &&
-                Math.floor(
-                  (today.getTime() - Date.parse(createdAt)) / 86400000
-                )}
-            </NumBig>
-            日経過
+            <NumBig>30</NumBig>日経過
           </Status>
           <Status>
-            {requiredTime && (
-              <>
-                <NumBig>{requiredTime}</NumBig>
-                で読める
-              </>
-            )}
-          </Status>
-          <Status>
-            {deadline ? (
-              <>
-                {Math.floor(
-                  (Date.parse(deadline) - today.getTime()) / 86400000
-                ) >= 0
-                  ? "あと"
-                  : ""}
-                <NumBig>
-                  {Math.abs(
-                    Math.floor(
-                      (Date.parse(deadline) - today.getTime()) / 86400000
-                    )
-                  )}
-                </NumBig>
-                日
-                {Math.floor(
-                  (Date.parse(deadline) - today.getTime()) / 86400000
-                ) < 0
-                  ? "経過"
-                  : ""}
-              </>
-            ) : null}
+            <NumBig>15</NumBig>分で読める
           </Status>
         </StatusBlack>
         <StatusBlack>
-          {tags.map((t) => (
-            <Tag key={t.id} name={t.name}></Tag>
-          ))}
+          <Tag name="web"></Tag>
+          <Tag name="Javascript"></Tag>
+          <Tag name="TSUNTSUN"></Tag>
         </StatusBlack>
       </ContentWrap>
-      <Button
-        onClick={(e) => {
-          deleteFunc(id);
-          if (!isHist) {
-            burst.tune({ x: e.pageX, y: e.pageY }).generate().replay();
-            bubbles.tune({ x: e.pageX, y: e.pageY }).generate().replay();
-          }
-        }}
-      >
-        {isHist ? "戻す" : "読んだ"}
-      </Button>
+      <Button>読んだ</Button>
     </Article>
   );
-};
+}
 
 export default Tsumi;
 
