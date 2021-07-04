@@ -1,7 +1,11 @@
+import { ReactNode } from "react";
 import styled from "styled-components";
 
-const Button: React.FC = ({ children }) => {
-  return <NomalButton>{children}</NomalButton>;
+const Button: React.FC<{
+  children: ReactNode;
+  onClick: (e: any) => void;
+}> = ({ children, onClick }) => {
+  return <NomalButton onClick={(e) => onClick(e)}>{children}</NomalButton>;
 };
 
 export default Button;
