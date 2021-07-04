@@ -84,7 +84,7 @@ func Init() {
 			fmt.Println(err)
 		}
 
-		// ユーザーがいなかったら作成
+		// 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
 		user := userController.PrepareUser(verifyResponseBody)
 		userExcludeLine := body.UesrExcludeLine{
 			ID:        user.ID,
@@ -97,19 +97,13 @@ func Init() {
 	})
 
 	// ログアウト
-	type RevokeRequestBody struct {
-		client_id      string
-		client_sercret string
-		access_token   string
-	}
-
 	e.GET("line_logout", func(c echo.Context) error {
 		accessToken := c.FormValue("access_token")
 
-		revokeRequestBody := &RevokeRequestBody{
-			client_id:      os.Getenv("CHANNEL_ID"),
-			client_sercret: os.Getenv("CHANNEL_SECRET"),
-			access_token:   accessToken,
+		revokeRequestBody := &body.RevokeRequestBody{
+			ClientID:      os.Getenv("CHANNEL_ID"),
+			ClientSercret: os.Getenv("CHANNEL_SECRET"),
+			AccessToken:   accessToken,
 		}
 
 		revokeJsonString, err := json.Marshal(revokeRequestBody)

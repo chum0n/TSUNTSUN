@@ -17,3 +17,9 @@ type VerifyResponseBody struct {
 	Picture string
 	Email   string
 }
+
+type RevokeRequestBody struct {
+	ClientID      string
+	ClientSercret string
+	AccessToken   string
+}
