@@ -84,7 +84,7 @@ const Tsumi: React.FC<
   return (
     <Article key={id}>
       <ContentWrap>
-        <Title>{url ? title : <a href={url}>{title}</a>}</Title>
+        <Title>{url === "" ? title : <a href={url}>{title}</a>}</Title>
         <StatusBlack>
           <Status>
             <NumBig>
