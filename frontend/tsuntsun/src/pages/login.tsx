@@ -3,7 +3,12 @@ function Login() {
     <body>
       <div className="login">
         <img
-          src={`${process.env.PUBLIC_URL}/LineLoginButtonImage/images/DeskTop/1x/20dp/btn_login_base.png`}
+          src={`${process.env.PUBLIC_URL}/bg.jpg`}
+          alt="背景"
+          style={{ width: "100%" }}
+        ></img>
+        <img
+          src={`${process.env.PUBLIC_URL}/LineLoginButtonImage/images/DeskTop/2x/44dp/btn_login_base.png`}
           alt="lINEでログイン"
           onClick={(e) =>
             (window.location.href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
