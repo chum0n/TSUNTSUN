@@ -30,7 +30,7 @@ const Header: React.FC<{
         ></img>
       </Logo>
       <div>
-        {name ? name : "チュモン"}さん、こんにちは　設定
+        {name ? name + "さん、こんにちは" : ""}　設定
         <LogoutButton onClick={() => logout()}>ログアウト</LogoutButton>
       </div>
     </HeaderBase>
