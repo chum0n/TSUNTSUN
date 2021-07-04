@@ -73,11 +73,17 @@ function ResultArea() {
   const deleteFunc = (id: number) => {
     const willDelete = tsumis.find((t) => t.id === id);
     if (willDelete) {
-      setDeleteTsumis((prev) => [...prev, willDelete]);
-      setTsumis((prev) => {
-        return prev.filter((t) => t.id !== id);
-      });
-      console.log(tsumis);
+      axios
+        .delete(
+          `https://tsuntsun-api.herokuapp.com/api/users/1/tsundokus/${id}`
+        )
+        .then((res) => {
+          setDeleteTsumis((prev) => [...prev, willDelete]);
+          setTsumis((prev) => {
+            return prev.filter((t) => t.id !== id);
+          });
+          console.log(tsumis);
+        });
     }
   };
 
