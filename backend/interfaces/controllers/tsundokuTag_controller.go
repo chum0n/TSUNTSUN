@@ -21,7 +21,7 @@ func NewTsundokuTagController(sqlHandler database.SqlHandler) *TsundokuTagContro
 	}
 }
 
-func (controller *TsundokuTagController) CreateTsundokuTag(c echo.Context, userID int, tsundokuID int, tagID int) {
+func (controller *TsundokuTagController) CreateTsundokuTag(c echo.Context, tsundokuID int, userID int, tagID int) {
 	tsundokuTag := domain.TsundokuTag{
 		TsundokuID: tsundokuID,
 		TagID:      tagID,
