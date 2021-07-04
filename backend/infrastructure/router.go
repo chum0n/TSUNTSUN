@@ -42,10 +42,31 @@ func Init() {
 		client_id string
 	}
 
+	type VerifyResponseBody struct {
+		iss     string
+		sub     string
+		aud     string
+		exp     int
+		iat     int
+		nonce   string
+		amr     []string
+		name    string
+		picture string
+		email   string
+	}
+
 	e.GET("/api/line_login", func(c echo.Context) error {
 		idToken := c.FormValue("id_token")
 		accessToken := c.FormValue("access_token")
 
+		// アクセストークンの有効性確認
+		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
+		if accessTokenStatus != 200 {
+			fmt.Println("アクセストークンが有効でありません。")
+			return c.JSON(accessTokenStatus, accessTokenResponse)
+		}
+
+		// ユーザー情報を取得
 		verifyRequestBody := &VerifyRequestBody{
 			id_token:  idToken,
 			client_id: os.Getenv("CHANNEL_ID"),
@@ -74,8 +95,15 @@ func Init() {
 		if err != nil {
 			fmt.Println(err)
 		}
+		var verifyResponseBody VerifyResponseBody
+		err = json.Unmarshal(byteArray, &verifyResponseBody)
+		if err != nil {
+			fmt.Println(err)
+		}
 
-		fmt.Printf("%#v", string(byteArray))
+		// ユーザーがいなかったら作成
+
+		return c.JSON(http.StatusOK, verifyResponseBody.name)
 	})
 
 	// ログアウト
