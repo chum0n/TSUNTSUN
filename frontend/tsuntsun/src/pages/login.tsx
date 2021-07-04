@@ -1,13 +1,7 @@
-import styled from "styled-components";
-
-function Header() {
+function Login() {
   return (
-    <HeaderBase className="header">
-      <Logo href="." className="brand">
-        ロゴ TsunTsun
-      </Logo>
-      <div>
-        チュモンさん、こんにちは　設定
+    <body>
+      <div className="login">
         <img
           src={`${process.env.PUBLIC_URL}/LineLoginButtonImage/images/DeskTop/1x/20dp/btn_login_base.png`}
           alt="lINEでログイン"
@@ -22,20 +16,8 @@ function Header() {
           }
         ></img>
       </div>
-    </HeaderBase>
+    </body>
   );
 }
 
-export default Header;
-
-const HeaderBase = styled.header`
-  background: #eaf5d3;
-  height: 65px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Logo = styled.a`
-  text-decoration: none;
-`;
+export default Login;
