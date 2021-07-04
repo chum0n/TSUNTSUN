@@ -12,5 +12,5 @@ type SqlHandler interface {
 	FindAllUserItem(object interface{}, userID int)
 	FindObjByIDs(object interface{}, ids []int)
 	FindObjByMultiIDs(object interface{}, firstID int, secondID int)
-	FindOrCreateUser(user *domain.User, userLine body.VerifyResponseBody)
+	FindOrCreateUser(user *domain.User, newUser *domain.User, userLine body.VerifyResponseBody) int
 }

@@ -21,7 +21,14 @@ func (db *UserRepository) Select() []domain.User {
 
 func (db *UserRepository) Prepare(userLine body.VerifyResponseBody) domain.User {
 	user := domain.User{}
-	db.FindOrCreateUser(&user, userLine)
+	newUser := domain.User{
+		Name:   userLine.Name,
+		LINEID: userLine.Sub,
+	}
+	affect := db.FindOrCreateUser(&user, &newUser, userLine)
+	if affect == 0 {
+		return newUser
+	}
 	return user
 }
 
