@@ -77,7 +77,10 @@ func Init() {
 		// 	fmt.Println(err)
 		// }
 
-		userID, userName := GetLINEProfile(accessToken)
+		userID, userName, err := GetLINEProfile(accessToken)
+		if err != nil {
+			return err
+		}
 		// url_target := "https://api.line.me/oauth2/v2.1/verify"
 		// args := url.Values{}
 		// args.Add("id_token", idToken)
