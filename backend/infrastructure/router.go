@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -184,7 +185,9 @@ func Init() {
 	// 積読全取得
 	e.GET("api/tsundokus", func(c echo.Context) error {
 		accessToken := c.Request().Header.Get("Authorization")
+		log.Println("access token : ", accessToken)
 		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
+		log.Println("accessTokenStatus : ", accessTokenStatus)
 		if accessTokenStatus != 200 {
 			fmt.Println("アクセストークンが有効でありません。")
 			return c.JSON(accessTokenStatus, accessTokenResponse)
