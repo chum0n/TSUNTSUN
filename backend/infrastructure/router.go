@@ -41,7 +41,7 @@ func Init() {
 	// LINE
 	// ログイン
 	e.POST("/api/line_login", func(c echo.Context) error {
-		idToken := c.FormValue("id_token")
+		// idToken := c.FormValue("id_token")
 		accessToken := c.FormValue("access_token")
 
 		// アクセストークンの有効性確認
