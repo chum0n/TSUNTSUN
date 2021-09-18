@@ -185,8 +185,8 @@ func Init() {
 	// 積読全取得
 	e.GET("api/tsundokus", func(c echo.Context) error {
 		accessToken := c.Request().Header.Get("Authorization")
-		log.Println("access token : ", accessToken)
-		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
+		log.Println("access token : ", accessToken[7:])
+		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken[7:])
 		log.Println("accessTokenStatus : ", accessTokenStatus)
 		if accessTokenStatus != 200 {
 			fmt.Println("アクセストークンが有効でありません。")
