@@ -1,7 +1,6 @@
 package database
 
 import (
-	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/domain"
 )
 
@@ -12,5 +11,5 @@ type SqlHandler interface {
 	FindAllUserItem(object interface{}, userID int)
 	FindObjByIDs(object interface{}, ids []int)
 	FindObjByMultiIDs(object interface{}, firstID int, secondID int)
-	FindOrCreateUser(user *domain.User, newUser *domain.User, userLine body.VerifyResponseBody) int
+	FindOrCreateUser(user *domain.User, newUser *domain.User) int
 }
