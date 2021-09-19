@@ -46,60 +46,7 @@ func Init() {
 		if err != nil {
 			return err
 		}
-		// idToken := c.FormValue("id_token")
 
-		// LINEのユーザー情報を取得
-		// verifyRequestBody := &body.VerifyRequestBody{ --ここから
-		// 	IDToken:  idToken,
-		// 	ClientID: os.Getenv("CHANNEL_ID"),
-		// }
-
-		// verifyJsonString, err := json.Marshal(verifyRequestBody)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-		// fmt.Println("router.goのverifyReqBody", verifyRequestBody)
-		// fmt.Println("router.goのverifyJSON", verifyJsonString) --ここまでいらなくない？？
-
-		// endpoint := "https://api.line.me/oauth2/v2.1/verify"
-		// req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(verifyJsonString))
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-		// req.Header.Set("Content-Type", "application/json")
-
-		// client := new(http.Client)
-		// resp, err := client.Do(req)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-
-		// url_target := "https://api.line.me/oauth2/v2.1/verify"
-		// args := url.Values{}
-		// args.Add("id_token", idToken)
-		// args.Add("client_id", os.Getenv("CHANNEL_ID"))
-		// fmt.Println("id_token", idToken)
-		// fmt.Println("client_id", os.Getenv("CHANNEL_ID"))
-		// resp, err := http.PostForm(url_target, args)
-		// if err != nil {
-		// 	fmt.Println("Request error:", err)
-		// 	return err
-		// }
-		// defer resp.Body.Close()
-
-		// fmt.Println("router.goのresp", resp)
-		// byteArray, err := ioutil.ReadAll(resp.Body)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-		// var verifyResponseBody body.VerifyResponseBody
-		// err = json.Unmarshal(byteArray, &verifyResponseBody)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-
-		// fmt.Println("router.goのuserLine", verifyResponseBody)
-		// 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
 		userExcludeLine := body.UesrExcludeLine{
 			ID:        user.ID,
 			Name:      user.Name,

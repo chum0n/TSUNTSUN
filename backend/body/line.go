@@ -1,9 +1,9 @@
 package body
 
 // LINEAPIでアクセストークンを用いて取得できるユーザー情報
-type LineUser struct {
+type LINEUser struct {
 	UserID        string
-	UserName      string
+	DisplayName   string
 	PictureUrl    string
 	StatusMessage string
 }
