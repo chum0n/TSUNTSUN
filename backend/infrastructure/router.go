@@ -45,6 +45,8 @@ func Init() {
 		// idToken := c.FormValue("id_token")
 		accessToken := c.FormValue("access_token")
 
+		log.Println("access token :", accessToken)
+
 		// アクセストークンの有効性確認
 		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
 		if accessTokenStatus != 200 {
@@ -193,7 +195,7 @@ func Init() {
 			return c.JSON(accessTokenStatus, accessTokenResponse)
 		}
 
-		userID, userName, err := GetLINEProfile(accessToken)
+		userID, userName, err := GetLINEProfile(accessToken[7:])
 		if err != nil {
 			return err
 		}
