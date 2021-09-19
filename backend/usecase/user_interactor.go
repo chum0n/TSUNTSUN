@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/domain"
 )
 
@@ -13,8 +12,8 @@ func (interactor *UserInteractor) Add(u domain.User) {
 	interactor.UserRepository.Store(u)
 }
 
-func (interactor *UserInteractor) Prepare(userLine body.VerifyResponseBody) domain.User {
-	user := interactor.UserRepository.Prepare(userLine)
+func (interactor *UserInteractor) Prepare(userID string, userName string) domain.User {
+	user := interactor.UserRepository.Prepare(userID, userName)
 	return user
 }
 

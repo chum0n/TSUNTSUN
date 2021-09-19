@@ -4,9 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"net/url"
 	"os"
 	"strconv"
 
@@ -43,7 +41,7 @@ func Init() {
 	// LINE
 	// ログイン
 	e.POST("/api/line_login", func(c echo.Context) error {
-		idToken := c.FormValue("id_token")
+		// idToken := c.FormValue("id_token")
 		accessToken := c.FormValue("access_token")
 
 		// アクセストークンの有効性確認
@@ -54,17 +52,17 @@ func Init() {
 		}
 
 		// LINEのユーザー情報を取得
-		verifyRequestBody := &body.VerifyRequestBody{
-			IDToken:  idToken,
-			ClientID: os.Getenv("CHANNEL_ID"),
-		}
+		// verifyRequestBody := &body.VerifyRequestBody{ --ここから
+		// 	IDToken:  idToken,
+		// 	ClientID: os.Getenv("CHANNEL_ID"),
+		// }
 
-		verifyJsonString, err := json.Marshal(verifyRequestBody)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println("router.goのverifyReqBody", verifyRequestBody)
-		fmt.Println("router.goのverifyJSON", verifyJsonString)
+		// verifyJsonString, err := json.Marshal(verifyRequestBody)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+		// fmt.Println("router.goのverifyReqBody", verifyRequestBody)
+		// fmt.Println("router.goのverifyJSON", verifyJsonString) --ここまでいらなくない？？
 
 		// endpoint := "https://api.line.me/oauth2/v2.1/verify"
 		// req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(verifyJsonString))
@@ -78,33 +76,38 @@ func Init() {
 		// if err != nil {
 		// 	fmt.Println(err)
 		// }
-		url_target := "https://api.line.me/oauth2/v2.1/verify"
-		args := url.Values{}
-		args.Add("id_token", idToken)
-		args.Add("client_id", os.Getenv("CHANNEL_ID"))
-		fmt.Println("id_token", idToken)
-		fmt.Println("client_id", os.Getenv("CHANNEL_ID"))
-		resp, err := http.PostForm(url_target, args)
+
+		userID, userName, err := GetLINEProfile(accessToken)
 		if err != nil {
-			fmt.Println("Request error:", err)
 			return err
 		}
-		defer resp.Body.Close()
+		// url_target := "https://api.line.me/oauth2/v2.1/verify"
+		// args := url.Values{}
+		// args.Add("id_token", idToken)
+		// args.Add("client_id", os.Getenv("CHANNEL_ID"))
+		// fmt.Println("id_token", idToken)
+		// fmt.Println("client_id", os.Getenv("CHANNEL_ID"))
+		// resp, err := http.PostForm(url_target, args)
+		// if err != nil {
+		// 	fmt.Println("Request error:", err)
+		// 	return err
+		// }
+		// defer resp.Body.Close()
 
-		fmt.Println("router.goのresp", resp)
-		byteArray, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Println(err)
-		}
-		var verifyResponseBody body.VerifyResponseBody
-		err = json.Unmarshal(byteArray, &verifyResponseBody)
-		if err != nil {
-			fmt.Println(err)
-		}
+		// fmt.Println("router.goのresp", resp)
+		// byteArray, err := ioutil.ReadAll(resp.Body)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+		// var verifyResponseBody body.VerifyResponseBody
+		// err = json.Unmarshal(byteArray, &verifyResponseBody)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
 
-		fmt.Println("router.goのuserLine", verifyResponseBody)
+		// fmt.Println("router.goのuserLine", verifyResponseBody)
 		// 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
-		user := userController.PrepareUser(verifyResponseBody)
+		user := userController.PrepareUser(userID, userName)
 		userExcludeLine := body.UesrExcludeLine{
 			ID:        user.ID,
 			Name:      user.Name,
@@ -179,17 +182,24 @@ func Init() {
 	})
 
 	// 積読全取得
-	e.GET("api/users/:userID/tsundokus", func(c echo.Context) error {
-		str_userID := c.Param("userID")
-		// intに変換
-		userID, err := strconv.Atoi(str_userID)
-		if err != nil {
-			fmt.Println(err)
+	e.GET("api/tsundokus", func(c echo.Context) error {
+		accessToken := c.Request().Header.Get("Authorization")
+		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
+		if accessTokenStatus != 200 {
+			fmt.Println("アクセストークンが有効でありません。")
+			return c.JSON(accessTokenStatus, accessTokenResponse)
 		}
-		tsundokus := tsundokuController.GetTsundoku(userID)
+
+		userID, userName, err := GetLINEProfile(accessToken)
+		if err != nil {
+			return err
+		}
+		user := userController.PrepareUser(userID, userName)
+
+		tsundokus := tsundokuController.GetTsundoku(user.ID)
 		c.Bind(&tsundokus)
 		for i, tsundoku := range tsundokus {
-			tsundokuTags := tsundokuTagController.GetTsundokuTagsByTsundokuIDandUserID(tsundoku.ID, userID)
+			tsundokuTags := tsundokuTagController.GetTsundokuTagsByTsundokuIDandUserID(tsundoku.ID, user.ID)
 			var tagIDs []int
 			for _, tsundokuTag := range tsundokuTags {
 				tagIDs = append(tagIDs, tsundokuTag.TagID)

@@ -6,7 +6,6 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
-	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/domain"
 	"github.com/yot-sailing/TSUNTSUN/interfaces/database"
 )
@@ -56,16 +55,12 @@ func (handler *SqlHandler) FindObjByMultiIDs(obj interface{}, tsundokuID int, us
 	handler.db.Where("tsundoku_id=? AND user_id=?", tsundokuID, userID).Find(obj)
 }
 
-func (handler *SqlHandler) FindOrCreateUser(user *domain.User, newUser *domain.User, userLine body.VerifyResponseBody) int {
-	fmt.Println("infra層のuserLine", userLine)
-	lineUserID := userLine.Sub
+func (handler *SqlHandler) FindOrCreateUser(user *domain.User, newUser *domain.User) int {
+	// fmt.Println("infra層のuserLine", userLine)
+	lineUserID := newUser.LINEID
 	result := handler.db.Where("line_id = ?", lineUserID).First(&user)
 	affect := result.RowsAffected
 	if affect == 0 {
-		newUser := domain.User{
-			Name:   userLine.Name,
-			LINEID: userLine.Sub,
-		}
 		handler.db.Create(&newUser)
 	}
 	return int(affect)
