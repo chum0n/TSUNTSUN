@@ -12,6 +12,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/interfaces/controllers"
+	authMiddleware "github.com/yot-sailing/TSUNTSUN/middleware"
 )
 
 func Init() {
@@ -41,15 +42,11 @@ func Init() {
 	// LINE
 	// ログイン
 	e.POST("/api/line_login", func(c echo.Context) error {
-		// idToken := c.FormValue("id_token")
-		accessToken := c.FormValue("access_token")
-
-		// アクセストークンの有効性確認
-		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
-		if accessTokenStatus != 200 {
-			fmt.Println("アクセストークンが有効でありません。")
-			return c.JSON(accessTokenStatus, accessTokenResponse)
+		user, err := authMiddleware.AuthUser(c.FormValue("access_token"))
+		if err != nil {
+			return err
 		}
+		// idToken := c.FormValue("id_token")
 
 		// LINEのユーザー情報を取得
 		// verifyRequestBody := &body.VerifyRequestBody{ --ここから
@@ -77,10 +74,6 @@ func Init() {
 		// 	fmt.Println(err)
 		// }
 
-		userID, userName, err := GetLINEProfile(accessToken)
-		if err != nil {
-			return err
-		}
 		// url_target := "https://api.line.me/oauth2/v2.1/verify"
 		// args := url.Values{}
 		// args.Add("id_token", idToken)
@@ -107,7 +100,6 @@ func Init() {
 
 		// fmt.Println("router.goのuserLine", verifyResponseBody)
 		// 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
-		user := userController.PrepareUser(userID, userName)
 		userExcludeLine := body.UesrExcludeLine{
 			ID:        user.ID,
 			Name:      user.Name,
@@ -183,18 +175,10 @@ func Init() {
 
 	// 積読全取得
 	e.GET("api/tsundokus", func(c echo.Context) error {
-		accessToken := c.Request().Header.Get("Authorization")
-		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
-		if accessTokenStatus != 200 {
-			fmt.Println("アクセストークンが有効でありません。")
-			return c.JSON(accessTokenStatus, accessTokenResponse)
-		}
-
-		userID, userName, err := GetLINEProfile(accessToken)
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"))
 		if err != nil {
 			return err
 		}
-		user := userController.PrepareUser(userID, userName)
 
 		tsundokus := tsundokuController.GetTsundoku(user.ID)
 		c.Bind(&tsundokus)
