@@ -1,10 +1,18 @@
 package body
 
+// LINEAPIでアクセストークンを用いて取得できるユーザー情報
+type LineUser struct {
+	UserID        string
+	UserName      string
+	PictureUrl    string
+	StatusMessage string
+}
 type VerifyRequestBody struct {
 	IDToken  string
 	ClientID string
 }
 
+// LINEAPIでIDトークンを用いて取得できるユーザー情報
 type VerifyResponseBody struct {
 	Iss     string
 	Sub     string
