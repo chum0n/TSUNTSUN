@@ -8,6 +8,8 @@ import (
 	"strconv"
 
 	"github.com/yot-sailing/TSUNTSUN/body"
+	"github.com/yot-sailing/TSUNTSUN/domain"
+	"github.com/yot-sailing/TSUNTSUN/interfaces/controllers"
 )
 
 type VerifyAccessTokenResponseBody struct {
@@ -16,7 +18,8 @@ type VerifyAccessTokenResponseBody struct {
 	expired_in int
 }
 
-func AuthUser(accessToken string) (user body.LINEUser, err error) {
+func AuthUser(accessToken string) (user domain.User, err error) {
+	var lineUser body.LINEUser
 	// アクセストークンの有効性のチェック
 	accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
 	if accessTokenStatus != 200 {
@@ -26,12 +29,16 @@ func AuthUser(accessToken string) (user body.LINEUser, err error) {
 		return user, err
 	}
 
-	user, err = GetLINEProfile(accessToken)
+	// アクセストークンからLINEのプロフィール情報を取得
+	lineUser, err = GetLINEProfile(accessToken)
 	if err != nil {
 		return user, err
 	}
-	user := userController.PrepareUser(userID, userName)
-	return user
+
+	// LINEのユーザー情報からTSUNTSUNのユーザー情報に変換
+	var userController *controllers.UserController
+	user = userController.PrepareUser(lineUser)
+	return user, nil
 }
 
 func VerifyAccessToken(access_token string) (int, VerifyAccessTokenResponseBody) {
