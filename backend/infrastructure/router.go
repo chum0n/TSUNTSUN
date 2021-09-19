@@ -45,7 +45,8 @@ func Init() {
 		// idToken := c.FormValue("id_token")
 		accessToken := c.FormValue("access_token")
 
-		log.Println("access token :", accessToken)
+		log.Println("access token all:", accessToken)
+		log.Println("access token :", accessToken[7:])
 
 		// アクセストークンの有効性確認
 		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
@@ -187,6 +188,7 @@ func Init() {
 	// 積読全取得
 	e.GET("api/tsundokus", func(c echo.Context) error {
 		accessToken := c.Request().Header.Get("Authorization")
+		log.Println("access token all : ", accessToken)
 		log.Println("access token : ", accessToken[7:])
 		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken[7:])
 		log.Println("accessTokenStatus : ", accessTokenStatus)
