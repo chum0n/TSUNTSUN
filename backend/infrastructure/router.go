@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -44,9 +43,6 @@ func Init() {
 	e.POST("/api/line_login", func(c echo.Context) error {
 		// idToken := c.FormValue("id_token")
 		accessToken := c.FormValue("access_token")
-
-		log.Println("access token all:", accessToken)
-		log.Println("access token :", accessToken[7:])
 
 		// アクセストークンの有効性確認
 		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
@@ -188,16 +184,13 @@ func Init() {
 	// 積読全取得
 	e.GET("api/tsundokus", func(c echo.Context) error {
 		accessToken := c.Request().Header.Get("Authorization")
-		log.Println("access token all : ", accessToken)
-		log.Println("access token : ", accessToken[7:])
-		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken[7:])
-		log.Println("accessTokenStatus : ", accessTokenStatus)
+		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
 		if accessTokenStatus != 200 {
 			fmt.Println("アクセストークンが有効でありません。")
 			return c.JSON(accessTokenStatus, accessTokenResponse)
 		}
 
-		userID, userName, err := GetLINEProfile(accessToken[7:])
+		userID, userName, err := GetLINEProfile(accessToken)
 		if err != nil {
 			return err
 		}

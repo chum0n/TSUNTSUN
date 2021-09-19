@@ -21,7 +21,7 @@ type LINEUser struct {
 }
 
 func VerifyAccessToken(access_token string) (int, VerifyAccessTokenResponseBody) {
-	endpoint := "https://api.line.me/oauth2/v2.1/verify?access_token=" + access_token
+	endpoint := "https://api.line.me/oauth2/v2.1/verify?access_token=" + access_token[7:]
 	resp, err := http.Get(endpoint)
 	if err != nil {
 		fmt.Println(err)
