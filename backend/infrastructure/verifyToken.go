@@ -45,7 +45,7 @@ func GetLINEProfile(access_token string) (string, string, error) {
 	var line_user_profile LINEUser
 
 	req, _ := http.NewRequest("GET", endpoint, nil)
-	req.Header.Set("Authorization", "Bearer "+access_token)
+	req.Header.Set("Authorization", access_token)
 
 	client := new(http.Client)
 	resp, err := client.Do(req)
