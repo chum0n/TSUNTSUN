@@ -87,6 +87,10 @@ func getLINEProfile(access_token string) (body.LINEUser, error) {
 }
 
 // IDトークンでの認証はここ。後でやる。
+func idToken() {
+
+}
+
 // idToken := c.FormValue("id_token")
 // LINEのユーザー情報を取得
 // verifyRequestBody := &body.VerifyRequestBody{ --ここから
