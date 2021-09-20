@@ -4,8 +4,12 @@ chrome.tabs.query({active: true, lastFocusedWindow:true}, tabs => {
   Data.URL = tabs[0].url;
   Data.Title = tabs[0].title
 });
+
 var added = false;
 $(document).ready(function () {
+  if (localStorage.getItem("access_token") != null) {
+    $(".login_container").show();
+  }
   $("input#title").val(Data.Title);
   $("input#url").val(Data.URL);
 
@@ -24,21 +28,20 @@ $(document).ready(function () {
     $(".tag-area").append('<div class="tag">' + newTag + "</div>");
   });
 
+  $(".login_button").on("click", function () {
+    const login_url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1656173858&redirect_uri=https://tsuntsun.herokuapp.com&state="+Math.random().toString(32).substring(2)+"&scope=profile%20openid&nonce="+Math.random().toString(32).substring(2)+"&bot_prompt=aggressive"
+
+    chrome.tabs.query({'active': true}, function(tabs) {
+      // chrome.tabs.update(tabs[0].id, {url: login_url } )
+      chrome.tabs.create({url : login_url});
+    });
+  });
+
   $("button.save").on("click", () => {
     // $(".add-view").hide();
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken == null) { // not login 
-      console.log("need to line login");
-      const login_url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1656173858&redirect_uri=https://tsuntsun.herokuapp.com&state="+Math.random().toString(32).substring(2)+"&scope=profile%20openid&nonce="+Math.random().toString(32).substring(2)+"&bot_prompt=aggressive"
-
-      chrome.tabs.query({'active': true}, function(tabs) {
-        chrome.tabs.update(tabs[0].id, {url: login_url } )
-        console.log("login success")
-        $(".login-button").on("click", () => {
-          console.log("clicked")
-        })
-      });
-
+      alert("ログインしてください");
       // const data = {"grant_type":'authorization_code', "code":"", "redirect_uil":Data.URL, "client_id": 1656173858, "client_secret":"e07ff58ce5052f7a5698319b3ec8493c"};
       // const param  = {
       //   method: "POST",
@@ -78,3 +81,4 @@ $(document).ready(function () {
     }
     
   });
+});

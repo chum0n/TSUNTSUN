@@ -14,6 +14,7 @@
   ],
   "action": {
     "default_title": "TSUNTSUN",
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_icon": "tsunmae.png"
   }
 }
