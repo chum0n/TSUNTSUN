@@ -28,25 +28,16 @@ export const AuthProvider: React.FC = ({ children }) => {
   const accessToken = () => localStorage.getItem("accessToken");
 
   const isLoggedIn = async () => {
-    let verifyed = false;
-    await axios
-      .get(
-        `https://api.line.me/oauth2/v2.1/verify?access_token=${
-          accessToken() ?? ""
-        }`,
-        {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        verifyed = true;
-      })
-      .catch((res) => {
-        console.log(res);
-      });
+    const res = await axios.get(
+      `https://api.line.me/oauth2/v2.1/verify?access_token=${
+        accessToken() ?? ""
+      }`,
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      }
+    );
 
-    return verifyed;
+    return res.status === 200;
   };
 
   const getloginHref = () => {
