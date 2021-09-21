@@ -7,10 +7,6 @@ type LINEUser struct {
 	PictureUrl    string
 	StatusMessage string
 }
-type VerifyRequestBody struct {
-	IDToken  string
-	ClientID string
-}
 
 // LINEAPIでIDトークンを用いて取得できるユーザー情報
 type VerifyResponseBody struct {
