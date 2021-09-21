@@ -9,7 +9,7 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   useEffect(() => {
     const f = async () => {
       setIsLoggedIn(await auth.isLoggedIn());
-      console.log(isLoggedIn);
+      console.log(await auth.isLoggedIn());
     };
     f();
   }, []);
