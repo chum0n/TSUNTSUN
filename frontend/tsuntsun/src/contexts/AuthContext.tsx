@@ -7,7 +7,7 @@ type auth = {
   accessToken: () => string | null;
   getloginHref: () => string;
   getToken: (code: string, string: string) => Promise<boolean>;
-  logout: () => Promise<boolean>;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = React.createContext<auth>({
@@ -16,7 +16,7 @@ const AuthContext = React.createContext<auth>({
   accessToken: () => "",
   getloginHref: () => "",
   getToken: async () => false,
-  logout: async () => false,
+  logout: async () => {},
 });
 
 export const useAuth = () => {
@@ -77,7 +77,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     return isLoggedIn();
   };
 
-  const logout = async (): Promise<boolean> => {
+  const logout = async (): Promise<void> => {
     const params = new URLSearchParams();
     params.append("accessToken", accessToken() ?? "");
     params.append("client_id", process.env.REACT_APP_CHANNEL_ID ?? "");
@@ -88,15 +88,13 @@ export const AuthProvider: React.FC = ({ children }) => {
       })
       .then((res) => {
         console.log(res);
-        localStorage.setItem("accessToken", "");
-        localStorage.setItem("idToken", "");
-        localStorage.setItem("isLoggedIn", "false");
-        return true;
       })
-      .catch(() => {
-        return false;
+      .catch((res) => {
+        console.log(res);
       });
-    return false;
+    localStorage.setItem("accessToken", "");
+    localStorage.setItem("idToken", "");
+    localStorage.setItem("isLoggedIn", "false");
   };
 
   const value = {

@@ -6,19 +6,10 @@ const Header: React.FC<{
 }> = ({ name }) => {
   const auth = useAuth();
   const logout = async () => {
-    const logoutted = await auth.logout();
-    if (logoutted) {
+    await auth.logout();
+    if (!auth.isLoggedIn()) {
       window.location.href = "https://tsuntsun.herokuapp.com/login";
     }
-    // axios
-    //   .get("https://tsuntsun-api.herokuapp.com/api/line_logout")
-    //   .then((res) => {
-    //     console.log(res);
-    //     window.location.href = "https://tsuntsun.herokuapp.com/login";
-    //   })
-    //   .catch((res) => {
-    //     console.log(res);
-    //   });
   };
   return (
     <HeaderBase className="header">
