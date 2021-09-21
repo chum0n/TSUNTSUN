@@ -28,13 +28,16 @@ export const AuthProvider: React.FC = ({ children }) => {
   const accessToken = () => localStorage.getItem("accessToken");
 
   const isLoggedIn = async () => {
-    const params = new URLSearchParams();
-    params.append("accessToken", accessToken() ?? "");
     let verifyed = false;
     await axios
-      .post("https://api.line.me/oauth2/v2.1/verify", params, {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      })
+      .get(
+        `https://api.line.me/oauth2/v2.1/verify?access_token=${
+          accessToken() ?? ""
+        }`,
+        {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        }
+      )
       .then(() => (verifyed = true));
 
     return verifyed;
@@ -87,9 +90,9 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const logout = async (): Promise<void> => {
     const params = new URLSearchParams();
-    params.append("accessToken", accessToken() ?? "");
     params.append("client_id", process.env.REACT_APP_CHANNEL_ID ?? "");
     params.append("client_secret", process.env.REACT_APP_CHANNEL_SECRET ?? "");
+    params.append("accessToken", accessToken() ?? "");
     await axios
       .post("https://api.line.me/oauth2/v2.1/revoke", params, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
