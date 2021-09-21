@@ -69,8 +69,10 @@ export const AuthProvider: React.FC = ({ children }) => {
         localStorage.setItem("isLoggedIn", "true");
         return true;
       })
-      .catch((res) => console.log("catch res", res));
-    return false;
+      .catch((res) => {
+        console.log("catch res", res);
+        return false;
+      });
   };
 
   const logout = (): boolean => {
@@ -89,8 +91,10 @@ export const AuthProvider: React.FC = ({ children }) => {
         localStorage.setItem("idToken", "");
         localStorage.setItem("isLoggedIn", "false");
         return true;
+      })
+      .catch(() => {
+        return false;
       });
-    return false;
   };
 
   const value = {
