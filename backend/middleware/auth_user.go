@@ -20,7 +20,7 @@ type VerifyAccessTokenResponseBody struct {
 	expired_in int
 }
 
-func AuthUser(accessToken string) (user domain.User, err error) {
+func AuthUser(accessToken string, userContoroller *controllers.UserController) (user domain.User, err error) {
 	var lineUser body.LINEUser
 	// アクセストークンの有効性のチェック
 	accessTokenStatus, accessTokenResponse := verifyAccessToken(accessToken)
@@ -38,8 +38,8 @@ func AuthUser(accessToken string) (user domain.User, err error) {
 	}
 
 	// LINEのユーザー情報からTSUNTSUNのユーザー情報に変換
-	var userController *controllers.UserController
-	user = userController.PrepareUser(lineUser)
+	// var userController controllers.UserController
+	user = userContoroller.PrepareUser(lineUser)
 	return user, nil
 }
 

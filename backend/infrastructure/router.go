@@ -42,7 +42,7 @@ func Init() {
 	// LINE
 	// ログイン
 	e.POST("/api/line_login", func(c echo.Context) error {
-		user, err := authMiddleware.AuthUser(c.FormValue("access_token"))
+		user, err := authMiddleware.AuthUser(c.FormValue("access_token"), userController)
 		if err != nil {
 			return err
 		}
@@ -122,7 +122,7 @@ func Init() {
 
 	// 積読全取得
 	e.GET("api/tsundokus", func(c echo.Context) error {
-		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"))
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
 			return err
 		}

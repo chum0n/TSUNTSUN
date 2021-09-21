@@ -33,7 +33,6 @@ func (controller *UserController) Create(c echo.Context) {
 
 // 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
 func (controller *UserController) PrepareUser(lineUser body.LINEUser) domain.User {
-	// fmt.Println("controller層のuserLine", userLine)
 	user := controller.Interactor.Prepare(lineUser.UserID, lineUser.DisplayName)
 	return user
 }
