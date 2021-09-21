@@ -38,7 +38,8 @@ func AuthUser(accessToken string, userContoroller *controllers.UserController) (
 	}
 
 	// LINEのユーザー情報からTSUNTSUNのユーザー情報に変換
-	// var userController controllers.UserController
+	// 下のようにここで定義して別インスタンス作るのはダメ
+	// var userController *controllers.UserController
 	user = userContoroller.PrepareUser(lineUser)
 	return user, nil
 }
