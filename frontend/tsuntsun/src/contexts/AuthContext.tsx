@@ -37,7 +37,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     return href;
   };
 
-  const getToken = (code: string, state: string): boolean => {
+  const getToken = async (code: string, state: string): Promise<boolean> => {
     // stateの確認
     const inputState = localStorage.getItem("state");
     console.log("login", inputState, state, code, isLoggedIn());
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     params.append("redirect_uri", "https://tsuntsun.herokuapp.com/after-login");
     params.append("client_id", process.env.REACT_APP_CHANNEL_ID ?? "");
     params.append("client_secret", process.env.REACT_APP_CHANNEL_SECRET ?? "");
-    axios
+    await axios
       .post("https://api.line.me/oauth2/v2.1/token", params, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
@@ -73,15 +73,16 @@ export const AuthProvider: React.FC = ({ children }) => {
         console.log("catch res", res);
         return false;
       });
+    return false;
   };
 
-  const logout = (): boolean => {
+  const logout = async (): Promise<boolean> => {
     const href = `https://api.line.me/oauth2/v2.1/revoke?client_id=${
       process.env.REACT_APP_CHANNEL_ID
     }&client_secret=${
       process.env.REACT_APP_CHANNEL_SECRET
     }&accessToken=${accessToken()}`;
-    axios
+    await axios
       .post(href, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
@@ -95,6 +96,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       .catch(() => {
         return false;
       });
+    return false;
   };
 
   const value = {
