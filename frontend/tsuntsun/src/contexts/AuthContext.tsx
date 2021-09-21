@@ -16,6 +16,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const isLoggedIn = () => localStorage.getItem("isLoggedIn") === "true";
 
   const login = (code: string) => {
+    console.log("login");
     const data = {
       code: code,
       redirect_uri: "https://tsuntsun.herokuapp.com",
@@ -27,8 +28,9 @@ export const AuthProvider: React.FC = ({ children }) => {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
-        console.log(res);
-      });
+        console.log("res", res);
+      })
+      .catch((res) => console.log("catchres", res));
     localStorage.setItem("isLoggedIn", "true");
     return;
   };
