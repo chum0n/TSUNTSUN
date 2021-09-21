@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useContext } from "react";
 
 type auth = {
-  isLoggedIn: () => boolean;
+  isLoggedIn: () => Promise<boolean>;
   idToken: () => string | null;
   accessToken: () => string | null;
   getloginHref: () => string;
@@ -11,7 +11,7 @@ type auth = {
 };
 
 const AuthContext = React.createContext<auth>({
-  isLoggedIn: () => false,
+  isLoggedIn: async () => false,
   idToken: () => "",
   accessToken: () => "",
   getloginHref: () => "",
@@ -24,9 +24,21 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const isLoggedIn = () => localStorage.getItem("isLoggedIn") === "true";
   const idToken = () => localStorage.getItem("idToken");
   const accessToken = () => localStorage.getItem("accessToken");
+
+  const isLoggedIn = async () => {
+    const params = new URLSearchParams();
+    params.append("accessToken", accessToken() ?? "");
+    let verifyed = false;
+    await axios
+      .post("https://api.line.me/oauth2/v2.1/verify", params, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      })
+      .then(() => (verifyed = true));
+
+    return verifyed;
+  };
 
   const getloginHref = () => {
     const state = Math.random().toString(32).substring(2);
@@ -40,7 +52,6 @@ export const AuthProvider: React.FC = ({ children }) => {
   const getToken = async (code: string, state: string): Promise<boolean> => {
     // stateの確認
     const inputState = localStorage.getItem("state");
-    console.log("login", inputState, state, code, isLoggedIn());
 
     if (inputState !== state) {
       localStorage.setItem("isLoggedIn", "false");
@@ -62,17 +73,14 @@ export const AuthProvider: React.FC = ({ children }) => {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
-        console.log("afterlogin", res);
         // tokenの保存
         localStorage.setItem("accessToken", res.data.access_token);
         localStorage.setItem("idToken", res.data.id_token);
-        localStorage.setItem("isLoggedIn", "true");
       })
       .catch((res) => {
         console.log("catch res", res);
         localStorage.setItem("accessToken", "");
         localStorage.setItem("idToken", "");
-        localStorage.setItem("isLoggedIn", "false");
       });
     return isLoggedIn();
   };
@@ -86,15 +94,13 @@ export const AuthProvider: React.FC = ({ children }) => {
       .post("https://api.line.me/oauth2/v2.1/revoke", params, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
-      .then((res) => {
-        console.log(res);
-      })
       .catch((res) => {
         console.log(res);
+      })
+      .finally(() => {
+        localStorage.setItem("accessToken", "");
+        localStorage.setItem("idToken", "");
       });
-    localStorage.setItem("accessToken", "");
-    localStorage.setItem("idToken", "");
-    localStorage.setItem("isLoggedIn", "false");
   };
 
   const value = {

@@ -15,7 +15,6 @@ function AfterLogin() {
       const result = await auth.getToken(code, state);
       setGotToken(result);
       setFinishLoaging(true);
-      console.log(result, auth.isLoggedIn());
     };
     f();
     // eslint-disable-next-line react-hooks/exhaustive-deps

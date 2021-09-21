@@ -1,14 +1,21 @@
 import { Redirect, Route, RouteProps } from "react-router";
+import { useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const auth = useAuth();
-  console.log(auth.isLoggedIn());
+  let isLoggedIn: boolean;
+  useEffect(() => {
+    const f = async () => {
+      isLoggedIn = await auth.isLoggedIn();
+    };
+    f();
+  }, []);
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth.isLoggedIn() ? (
+        isLoggedIn ? (
           children
         ) : (
           <Redirect
