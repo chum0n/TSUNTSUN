@@ -11,10 +11,13 @@ function AfterLogin() {
   const code = query.get("code") ?? "";
   const state = query.get("state") ?? "";
   useEffect(() => {
-    const result = auth.getToken(code, state);
-    setGotToken(result);
-    setFinishLoaging(true);
-    console.log(result, auth.isLoggedIn());
+    const f = async () => {
+      const result = await auth.getToken(code, state);
+      setGotToken(result);
+      setFinishLoaging(true);
+      console.log(result, auth.isLoggedIn());
+    };
+    f();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (

@@ -3,6 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const auth = useAuth();
+  console.log(auth.isLoggedIn());
   return (
     <Route
       {...rest}

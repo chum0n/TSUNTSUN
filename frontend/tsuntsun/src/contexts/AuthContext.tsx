@@ -6,8 +6,8 @@ type auth = {
   idToken: () => string | null;
   accessToken: () => string | null;
   getloginHref: () => string;
-  getToken: (code: string, string: string) => boolean;
-  logout: () => boolean;
+  getToken: (code: string, string: string) => Promise<boolean>;
+  logout: () => Promise<boolean>;
 };
 
 const AuthContext = React.createContext<auth>({
@@ -15,8 +15,8 @@ const AuthContext = React.createContext<auth>({
   idToken: () => "",
   accessToken: () => "",
   getloginHref: () => "",
-  getToken: () => false,
-  logout: () => false,
+  getToken: async () => false,
+  logout: async () => false,
 });
 
 export const useAuth = () => {
