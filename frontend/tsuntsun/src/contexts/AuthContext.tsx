@@ -78,13 +78,12 @@ export const AuthProvider: React.FC = ({ children }) => {
   };
 
   const logout = async (): Promise<boolean> => {
-    const href = `https://api.line.me/oauth2/v2.1/revoke?client_id=${
-      process.env.REACT_APP_CHANNEL_ID
-    }&client_secret=${
-      process.env.REACT_APP_CHANNEL_SECRET
-    }&accessToken=${accessToken()}`;
+    const params = new URLSearchParams();
+    params.append("accessToken", accessToken() ?? "");
+    params.append("client_id", process.env.REACT_APP_CHANNEL_ID ?? "");
+    params.append("client_secret", process.env.REACT_APP_CHANNEL_SECRET ?? "");
     await axios
-      .post(href, {
+      .post("https://api.line.me/oauth2/v2.1/revoke", params, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
