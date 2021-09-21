@@ -62,6 +62,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
+        console.log("afterlogin", res);
         // tokenの保存
         localStorage.setItem("accessToken", res.data.access_token);
         localStorage.setItem("idToken", res.data.id_token);
