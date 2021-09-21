@@ -49,14 +49,13 @@ export const AuthProvider: React.FC = ({ children }) => {
     localStorage.setItem("nonce", "");
 
     // tokenの取得
-    const data = {
-      code: code,
-      redirect_uri: "https://tsuntsun.herokuapp.com/after-login",
-      client_id: process.env.REACT_APP_CHANNEL_ID,
-      client_secret: process.env.REACT_APP_CHANNEL_SECRET,
-    };
+    const params = new URLSearchParams();
+    params.append("code", code);
+    params.append("redirect_uri", "https://tsuntsun.herokuapp.com/after-login");
+    params.append("client_id", process.env.REACT_APP_CHANNEL_ID ?? "");
+    params.append("client_secret", process.env.REACT_APP_CHANNEL_SECRET ?? "");
     axios
-      .post("https://api.line.me/oauth2/v2.1/token", data, {
+      .post("https://api.line.me/oauth2/v2.1/token", params, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
@@ -66,7 +65,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         localStorage.setItem("isLoggedIn", "true");
         return true;
       })
-      .catch((res) => console.log("catchres", res));
+      .catch((res) => console.log("catch res", res));
     return false;
   };
 
