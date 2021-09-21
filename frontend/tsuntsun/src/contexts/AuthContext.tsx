@@ -38,7 +38,10 @@ export const AuthProvider: React.FC = ({ children }) => {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         }
       )
-      .then(() => (verifyed = true))
+      .then((res) => {
+        console.log(res);
+        verifyed = true;
+      })
       .catch((res) => {
         console.log(res);
       });
