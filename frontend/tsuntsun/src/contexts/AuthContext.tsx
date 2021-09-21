@@ -24,9 +24,9 @@ export const AuthProvider: React.FC = ({ children }) => {
     console.log("login");
     const state = Math.random().toString(32).substring(2);
     const nonce = Math.random().toString(32).substring(2);
-    const href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${process.env.REACT_APP_CHANNEL_ID}&redirect_uri=https://tsuntsun.herokuapp.com&state=${state}&scope=profile%20openid&nonce=${nonce}&bot_prompt=aggressive`;
     localStorage.setItem("state", state);
     localStorage.setItem("nonce", nonce);
+    const href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${process.env.REACT_APP_CHANNEL_ID}&redirect_uri=https://tsuntsun.herokuapp.com/afterLogin&state=${state}&scope=profile%20openid&nonce=${nonce}&bot_prompt=aggressive`;
     return href;
   };
 
@@ -39,7 +39,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     console.log("login");
     const data = {
       code: code,
-      redirect_uri: "https://tsuntsun.herokuapp.com",
+      redirect_uri: "https://tsuntsun.herokuapp.com/afterLogin",
       client_id: process.env.REACT_APP_CHANNEL_ID,
       client_secret: process.env.REACT_APP_CHANNEL_SECRET,
     };
