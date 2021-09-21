@@ -67,13 +67,14 @@ export const AuthProvider: React.FC = ({ children }) => {
         localStorage.setItem("accessToken", res.data.access_token);
         localStorage.setItem("idToken", res.data.id_token);
         localStorage.setItem("isLoggedIn", "true");
-        return true;
       })
       .catch((res) => {
         console.log("catch res", res);
-        return false;
+        localStorage.setItem("accessToken", "");
+        localStorage.setItem("idToken", "");
+        localStorage.setItem("isLoggedIn", "false");
       });
-    return false;
+    return isLoggedIn();
   };
 
   const logout = async (): Promise<boolean> => {
