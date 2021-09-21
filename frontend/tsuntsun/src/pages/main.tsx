@@ -11,10 +11,6 @@ import { useAuth } from "../contexts/AuthContext";
 
 function Main() {
   const auth = useAuth();
-  const search = useLocation().search;
-  const query = new URLSearchParams(search);
-  const code = query.get("code") ?? "";
-  const state = query.get("state") ?? "";
 
   const [name, setName] = useState();
 

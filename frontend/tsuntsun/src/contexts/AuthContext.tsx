@@ -38,6 +38,8 @@ export const AuthProvider: React.FC = ({ children }) => {
   const getToken = (code: string, state: string): boolean => {
     // stateの確認
     const inputState = localStorage.getItem("state");
+    console.log("login", inputState, state, code, isLoggedIn());
+
     if (inputState !== state) {
       localStorage.setItem("isLoggedIn", "false");
       return false;
@@ -45,8 +47,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     // stateなど一時保存したものの削除
     localStorage.setItem("state", "");
     localStorage.setItem("nonce", "");
-
-    console.log("login");
 
     // tokenの取得
     const data = {
