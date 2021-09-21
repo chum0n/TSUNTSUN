@@ -19,7 +19,6 @@ function Main() {
   const [name, setName] = useState();
 
   useEffect(() => {
-    auth.afterLogin(code, state);
     const bodyFormData = new FormData();
     const idToken = auth.idToken();
     const accessToken = auth.accessToken();

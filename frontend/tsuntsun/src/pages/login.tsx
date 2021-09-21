@@ -13,7 +13,7 @@ function Login() {
         <img
           src={`${process.env.PUBLIC_URL}/LineLoginButtonImage/images/DeskTop/2x/44dp/btn_login_base.png`}
           alt="lINEでログイン"
-          onClick={() => (window.location.href = auth.login())}
+          onClick={() => (window.location.href = auth.getloginHref())}
         ></img>
       </div>
     </body>

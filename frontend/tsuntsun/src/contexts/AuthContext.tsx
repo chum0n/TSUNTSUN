@@ -5,16 +5,16 @@ type auth = {
   isLoggedIn: () => boolean;
   idToken: () => string | null;
   accessToken: () => string | null;
-  login: () => string;
-  afterLogin: (code: string, string: string) => void;
+  getloginHref: () => string;
+  getToken: (code: string, string: string) => boolean;
 };
 
 const AuthContext = React.createContext<auth>({
   isLoggedIn: () => false,
   idToken: () => "",
   accessToken: () => "",
-  login: () => "",
-  afterLogin: () => {},
+  getloginHref: () => "",
+  getToken: () => false,
 });
 
 export const useAuth = () => {
@@ -26,28 +26,32 @@ export const AuthProvider: React.FC = ({ children }) => {
   const idToken = () => localStorage.getItem("idToken");
   const accessToken = () => localStorage.getItem("accessToken");
 
-  const login = () => {
-    console.log("login");
+  const getloginHref = () => {
     const state = Math.random().toString(32).substring(2);
     const nonce = Math.random().toString(32).substring(2);
     localStorage.setItem("state", state);
     localStorage.setItem("nonce", nonce);
-    const href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${process.env.REACT_APP_CHANNEL_ID}&redirect_uri=https://tsuntsun.herokuapp.com&state=${state}&scope=profile%20openid&nonce=${nonce}&bot_prompt=aggressive`;
+    const href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${process.env.REACT_APP_CHANNEL_ID}&redirect_uri=https://tsuntsun.herokuapp.com/after-login&state=${state}&scope=profile%20openid&nonce=${nonce}&bot_prompt=aggressive`;
     return href;
   };
 
-  const afterLogin = (code: string, state: string) => {
+  const getToken = (code: string, state: string): boolean => {
+    // stateの確認
     const inputState = localStorage.getItem("state");
     if (inputState !== state) {
       localStorage.setItem("isLoggedIn", "false");
-      return;
+      return false;
     }
+    // stateなど一時保存したものの削除
     localStorage.setItem("state", "");
     localStorage.setItem("nonce", "");
+
     console.log("login");
+
+    // tokenの取得
     const data = {
       code: code,
-      redirect_uri: "https://tsuntsun.herokuapp.com",
+      redirect_uri: "https://tsuntsun.herokuapp.com/after-login",
       client_id: process.env.REACT_APP_CHANNEL_ID,
       client_secret: process.env.REACT_APP_CHANNEL_SECRET,
     };
@@ -56,20 +60,22 @@ export const AuthProvider: React.FC = ({ children }) => {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
+        // tokenの保存
         localStorage.setItem("accessToken", res.data.access_token);
         localStorage.setItem("idToken", res.data.id_token);
+        localStorage.setItem("isLoggedIn", "true");
+        return true;
       })
       .catch((res) => console.log("catchres", res));
-    localStorage.setItem("isLoggedIn", "true");
-    return;
+    return false;
   };
 
   const value = {
     isLoggedIn,
     idToken,
     accessToken,
-    login,
-    afterLogin,
+    getloginHref,
+    getToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
