@@ -7,11 +7,12 @@ function AfterLogin() {
   const search = useLocation().search;
   const query = new URLSearchParams(search);
   const code = query.get("code") ?? "";
+  const state = query.get("state") ?? "";
   useEffect(() => {
-    auth.login(code);
+    auth.afterLogin(code, state);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return <body></body>;
+  return <body />;
 }
 
 export default AfterLogin;
