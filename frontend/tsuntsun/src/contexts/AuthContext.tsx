@@ -7,6 +7,7 @@ type auth = {
   accessToken: () => string | null;
   getloginHref: () => string;
   getToken: (code: string, string: string) => boolean;
+  logout: () => boolean;
 };
 
 const AuthContext = React.createContext<auth>({
@@ -15,6 +16,7 @@ const AuthContext = React.createContext<auth>({
   accessToken: () => "",
   getloginHref: () => "",
   getToken: () => false,
+  logout: () => false,
 });
 
 export const useAuth = () => {
@@ -70,12 +72,33 @@ export const AuthProvider: React.FC = ({ children }) => {
     return false;
   };
 
+  const logout = (): boolean => {
+    const href = `https://api.line.me/oauth2/v2.1/revoke?client_id=${
+      process.env.REACT_APP_CHANNEL_ID
+    }&client_secret=${
+      process.env.REACT_APP_CHANNEL_SECRET
+    }&accessToken=${accessToken()}`;
+    axios
+      .post(href, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      })
+      .then((res) => {
+        console.log(res);
+        localStorage.setItem("accessToken", "");
+        localStorage.setItem("idToken", "");
+        localStorage.setItem("isLoggedIn", "false");
+        return true;
+      });
+    return false;
+  };
+
   const value = {
     isLoggedIn,
     idToken,
     accessToken,
     getloginHref,
     getToken,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

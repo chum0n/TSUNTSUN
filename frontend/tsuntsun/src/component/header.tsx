@@ -1,10 +1,15 @@
 import styled from "styled-components";
+import { useAuth } from "../contexts/AuthContext";
 
 const Header: React.FC<{
   name?: string;
 }> = ({ name }) => {
+  const auth = useAuth();
   const logout = () => {
-    window.location.href = "https://tsuntsun.herokuapp.com/login";
+    const logoutted = auth.logout();
+    if (logoutted) {
+      window.location.href = "https://tsuntsun.herokuapp.com/login";
+    }
     // axios
     //   .get("https://tsuntsun-api.herokuapp.com/api/line_logout")
     //   .then((res) => {
