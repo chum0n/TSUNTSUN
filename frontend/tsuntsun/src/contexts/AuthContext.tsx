@@ -50,6 +50,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     // tokenの取得
     const params = new URLSearchParams();
+    params.append("grant_type", "authorization_code");
     params.append("code", code);
     params.append("redirect_uri", "https://tsuntsun.herokuapp.com/after-login");
     params.append("client_id", process.env.REACT_APP_CHANNEL_ID ?? "");
