@@ -3,12 +3,16 @@ import React, { useContext } from "react";
 
 type auth = {
   isLoggedIn: () => boolean;
+  idToken: () => string | null;
+  accessToken: () => string | null;
   login: () => string;
   afterLogin: (code: string, string: string) => void;
 };
 
 const AuthContext = React.createContext<auth>({
   isLoggedIn: () => false,
+  idToken: () => "",
+  accessToken: () => "",
   login: () => "",
   afterLogin: () => {},
 });
@@ -19,6 +23,8 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC = ({ children }) => {
   const isLoggedIn = () => localStorage.getItem("isLoggedIn") === "true";
+  const idToken = () => localStorage.getItem("idToken");
+  const accessToken = () => localStorage.getItem("accessToken");
 
   const login = () => {
     console.log("login");
@@ -26,7 +32,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     const nonce = Math.random().toString(32).substring(2);
     localStorage.setItem("state", state);
     localStorage.setItem("nonce", nonce);
-    const href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${process.env.REACT_APP_CHANNEL_ID}&redirect_uri=https://tsuntsun.herokuapp.com/afterLogin&state=${state}&scope=profile%20openid&nonce=${nonce}&bot_prompt=aggressive`;
+    const href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${process.env.REACT_APP_CHANNEL_ID}&redirect_uri=https://tsuntsun.herokuapp.com&state=${state}&scope=profile%20openid&nonce=${nonce}&bot_prompt=aggressive`;
     return href;
   };
 
@@ -36,10 +42,12 @@ export const AuthProvider: React.FC = ({ children }) => {
       localStorage.setItem("isLoggedIn", "false");
       return;
     }
+    localStorage.setItem("state", "");
+    localStorage.setItem("nonce", "");
     console.log("login");
     const data = {
       code: code,
-      redirect_uri: "https://tsuntsun.herokuapp.com/afterLogin",
+      redirect_uri: "https://tsuntsun.herokuapp.com",
       client_id: process.env.REACT_APP_CHANNEL_ID,
       client_secret: process.env.REACT_APP_CHANNEL_SECRET,
     };
@@ -48,7 +56,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
-        console.log("res", res);
+        localStorage.setItem("accessToken", res.data.access_token);
+        localStorage.setItem("idToken", res.data.id_token);
       })
       .catch((res) => console.log("catchres", res));
     localStorage.setItem("isLoggedIn", "true");
@@ -57,6 +66,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const value = {
     isLoggedIn,
+    idToken,
+    accessToken,
     login,
     afterLogin,
   };
