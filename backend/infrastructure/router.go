@@ -58,7 +58,7 @@ func Init() {
 	})
 
 	// ログアウト
-	e.POST("line_logout", func(c echo.Context) error { // エンドポイント揃える
+	e.POST("/api/line_logout", func(c echo.Context) error {
 		accessToken := c.FormValue("access_token")
 
 		revokeRequestBody := &body.RevokeRequestBody{
@@ -109,14 +109,12 @@ func Init() {
 	})
 
 	// ユーザー削除
-	e.DELETE("/api/users/:id", func(c echo.Context) error { //これ
-		id := c.Param("id")
-		// intに変換
-		userID, err := strconv.Atoi(id)
+	e.DELETE("/api/users", func(c echo.Context) error {
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
-		userController.Delete(userID)
+		userController.Delete(user.ID)
 		return c.String(http.StatusOK, "deleted")
 	})
 
