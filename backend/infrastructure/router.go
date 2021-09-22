@@ -58,7 +58,7 @@ func Init() {
 	})
 
 	// ログアウト
-	e.POST("line_logout", func(c echo.Context) error {
+	e.POST("line_logout", func(c echo.Context) error { // エンドポイント揃える
 		accessToken := c.FormValue("access_token")
 
 		revokeRequestBody := &body.RevokeRequestBody{
@@ -109,7 +109,7 @@ func Init() {
 	})
 
 	// ユーザー削除
-	e.DELETE("/api/users/:id", func(c echo.Context) error {
+	e.DELETE("/api/users/:id", func(c echo.Context) error { //これ
 		id := c.Param("id")
 		// intに変換
 		userID, err := strconv.Atoi(id)
@@ -141,7 +141,7 @@ func Init() {
 	})
 
 	// 積読追加
-	e.POST("api/users/:userID/tsundokus", func(c echo.Context) error {
+	e.POST("api/users/:userID/tsundokus", func(c echo.Context) error { // ここから
 		str_userID := c.Param("userID")
 		// intに変換
 		userID, err := strconv.Atoi(str_userID)
