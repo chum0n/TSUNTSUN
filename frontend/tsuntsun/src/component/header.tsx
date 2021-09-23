@@ -7,7 +7,8 @@ const Header: React.FC<{
   const auth = useAuth();
   const logout = async () => {
     await auth.logout();
-    if (!auth.isLoggedIn()) {
+    const isLoggedIn = await auth.isLoggedIn();
+    if (!isLoggedIn) {
       window.location.href = "https://tsuntsun.herokuapp.com/login";
     }
   };
