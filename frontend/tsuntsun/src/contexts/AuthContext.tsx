@@ -100,7 +100,7 @@ export const AuthProvider: React.FC = ({ children }) => {
             process.env.REACT_APP_CHANNEL_ID
           }&client_secret=${
             process.env.REACT_APP_CHANNEL_SECRET
-          }&accessToken=${accessToken()}`
+          }&access_token=${accessToken()}`
         )
         .catch((res) => {
           console.log(res);
