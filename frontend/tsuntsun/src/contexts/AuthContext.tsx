@@ -94,14 +94,13 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const logout = async (): Promise<void> => {
     try {
+      const data = {
+        client_id: process.env.REACT_APP_CHANNEL_ID,
+        client_secret: process.env.REACT_APP_CHANNEL_SECRET,
+        access_token: accessToken(),
+      };
       await axios
-        .post(
-          `https://api.line.me/oauth2/v2.1/revoke?client_id=${
-            process.env.REACT_APP_CHANNEL_ID
-          }&client_secret=${
-            process.env.REACT_APP_CHANNEL_SECRET
-          }&access_token=${accessToken()}`
-        )
+        .post("https://api.line.me/oauth2/v2.1/revoke", data)
         .catch((res) => {
           console.log(res);
         })
