@@ -107,7 +107,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       );
       params.append("access_token", accessToken() ?? "");
       await axios
-        .post("https://api.line.me/oauth2/v2.1/token", params, {
+        .post("https://api.line.me/oauth2/v2.1/revoke", params, {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         })
         .catch((res) => {
