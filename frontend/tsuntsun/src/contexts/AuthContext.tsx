@@ -37,7 +37,9 @@ export const AuthProvider: React.FC = ({ children }) => {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         }
       )
-      .catch();
+      .catch((err) => {
+        return err.response;
+      });
     console.log(res.status, res.status === 200);
     return res.status === 200;
   };
