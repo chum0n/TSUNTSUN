@@ -23,10 +23,10 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-export const AuthProvider: React.FC = ({ children }) => {
-  const idToken = () => localStorage.getItem("idToken");
-  const accessToken = () => localStorage.getItem("accessToken");
+export const idToken = () => localStorage.getItem("idToken");
+export const accessToken = () => localStorage.getItem("accessToken");
 
+export const AuthProvider: React.FC = ({ children }) => {
   const isLoggedIn = async () => {
     try {
       const res = await axios
@@ -97,17 +97,25 @@ export const AuthProvider: React.FC = ({ children }) => {
     params.append("client_id", process.env.REACT_APP_CHANNEL_ID ?? "");
     params.append("client_secret", process.env.REACT_APP_CHANNEL_SECRET ?? "");
     params.append("accessToken", accessToken() ?? "");
-    await axios
-      .post("https://api.line.me/oauth2/v2.1/revoke", params, {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      })
-      .catch((res) => {
-        console.log(res);
-      })
-      .finally(() => {
-        localStorage.setItem("accessToken", "");
-        localStorage.setItem("idToken", "");
-      });
+    try {
+      await axios
+        .post(
+          `https://api.line.me/oauth2/v2.1/revoke?client_id=${process.env.REACT_APP_CHANNEL_ID}&client_secret=${process.env.REACT_APP_CHANNEL_SECRET}&accessToken=${accessToken}`,
+          params,
+          {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          }
+        )
+        .catch((res) => {
+          console.log(res);
+        })
+        .finally(() => {
+          localStorage.setItem("accessToken", "");
+          localStorage.setItem("idToken", "");
+        });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const value = {
