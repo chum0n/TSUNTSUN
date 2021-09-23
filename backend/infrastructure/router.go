@@ -202,7 +202,7 @@ func Init() {
 		// intに変換
 		tsundokuID, err := strconv.Atoi(str_tsundokuID)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 
 		tsundokuTags := tsundokuTagController.GetTsundokuTagsByTsundokuIDandUserID(tsundokuID, user.ID)
@@ -227,7 +227,7 @@ func Init() {
 		// intに変換
 		tsundokuID, err := strconv.Atoi(str_tsundokuID)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 
 		// Tagsテーブルにレコードを追加
