@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Color from "../const/Color";
 import Tsumi, { TsumiObject } from "./tsumi";
 
 const Card: React.FC<{
@@ -18,13 +17,15 @@ const Card: React.FC<{
 
   return (
     <CardBase>
-      <h2>{name}</h2>
+      <div>
+        <h2>{name}</h2>
+        <PageDisplay>
+          {isLastPage ? tsumis.length : page * 10}/
+          <NumBig>{tsumis.length}</NumBig>件
+        </PageDisplay>
+      </div>
       {tsumis.length !== 0 ? (
         <div>
-          <div>
-            {isLastPage ? tsumis.length : page * 10}/
-            <NumBig>{tsumis.length}</NumBig>件
-          </div>
           {tsumis.map((tsumi) => (
             <Tsumi
               key={tsumi.id}
@@ -57,11 +58,19 @@ const Card: React.FC<{
 export default Card;
 
 const CardBase = styled.div`
+  position: relative;
   width: 700px;
   min-height: 7000px;
+  padding: 20px;
   margin: 0 auto;
   background-color: white;
   border-radius: 10px;
+`;
+
+const PageDisplay = styled.div`
+  position: absolute;
+  top: 40px;
+  right: 30px;
 `;
 
 const NumBig = styled.span`
