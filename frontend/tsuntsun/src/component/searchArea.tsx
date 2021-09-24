@@ -1,4 +1,4 @@
-import axios from "axios";
+import defaultAxios from "../utils/defaultAxios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { DarkButton } from "./button";
@@ -9,11 +9,9 @@ function SearchArea() {
   const [tags, setTags] = useState<TagObject[]>([]);
 
   useEffect(() => {
-    axios
-      .get("https://tsuntsun-api.herokuapp.com/api/users/1/tags")
-      .then((res) => {
-        setTags(res.data);
-      });
+    defaultAxios.get("/tags").then((res) => {
+      setTags(res.data);
+    });
   }, []);
   return (
     <Area className="search-area">

@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import defaultAxios from "../utils/defaultAxios";
 import { TagObject, TsumiObject } from "./tsumi";
 
 function ResultArea() {
@@ -41,11 +41,9 @@ function ResultArea() {
   };
 
   useEffect(() => {
-    axios
-      .get("https://tsuntsun-api.herokuapp.com/api/users/1/tsundokus")
-      .then((res) => {
-        setTsumis(res.data);
-      });
+    defaultAxios.get("/tsundokus").then((res) => {
+      setTsumis(res.data);
+    });
   }, []);
 
   useEffect(() => {
@@ -73,17 +71,13 @@ function ResultArea() {
   const deleteFunc = (id: number) => {
     const willDelete = tsumis.find((t) => t.id === id);
     if (willDelete) {
-      axios
-        .delete(
-          `https://tsuntsun-api.herokuapp.com/api/users/1/tsundokus/${id}`
-        )
-        .then((res) => {
-          setDeleteTsumis((prev) => [...prev, willDelete]);
-          setTsumis((prev) => {
-            return prev.filter((t) => t.id !== id);
-          });
-          console.log(tsumis);
+      defaultAxios.delete(`/tsundokus/${id}`).then((res) => {
+        setDeleteTsumis((prev) => [...prev, willDelete]);
+        setTsumis((prev) => {
+          return prev.filter((t) => t.id !== id);
         });
+        console.log(tsumis);
+      });
     }
   };
 
