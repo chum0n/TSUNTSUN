@@ -1,19 +1,8 @@
-import defaultAxios from "../utils/defaultAxios";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { RiSearchLine } from "react-icons/ri";
 import Color from "../const/Color";
-import { TagObject } from "./tsumi";
 
 function SearchArea() {
-  const [radio, setRadio] = useState<string>("全て");
-  const [tags, setTags] = useState<TagObject[]>([]);
-
-  useEffect(() => {
-    defaultAxios.get("/tags").then((res) => {
-      setTags(res.data);
-    });
-  }, []);
   return (
     <Area className="search-area">
       <SelectArea>
