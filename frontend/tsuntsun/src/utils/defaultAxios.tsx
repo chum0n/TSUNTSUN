@@ -8,17 +8,20 @@ const createAxiosInstance = () => {
 
   axiosInstance.interceptors.request.use((request) => {
     request.headers["Authorization"] = accessToken();
-    console.dir("request", request);
+    console.log("request");
+    console.dir(request);
     return request;
   });
 
   axiosInstance.interceptors.response.use(
     (response) => {
-      console.dir("response", response);
+      console.log("response");
+      console.dir(response);
       return response;
     },
     (error) => {
-      console.log("error", error);
+      console.log("error");
+      console.log(error);
     }
   );
   return axiosInstance;
