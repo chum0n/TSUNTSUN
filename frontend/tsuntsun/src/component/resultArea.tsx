@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import defaultAxios from "../utils/defaultAxios";
 import { TagObject, TsumiObject } from "./tsumi";
+import Color from "../const/Color";
 
 function ResultArea() {
   const [nav, setNav] = useState<Slider>();
@@ -161,7 +162,6 @@ const ResultTop = styled.div`
   padding: 10px;
   margin: 30px auto;
   text-align: center;
-  background-color: white;
 
   .slick-prev::before,
   .slick-next::before {
@@ -183,7 +183,7 @@ const NavArea = styled.div`
 const Nav = styled.button`
   width: 100px;
   font-size: 22px;
-  background-color: white;
+  background-color: ${Color.BACKGROUND};
   border: 0;
   border-bottom: 2px solid transparent;
 
