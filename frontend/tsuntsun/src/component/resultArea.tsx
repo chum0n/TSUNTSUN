@@ -45,29 +45,19 @@ function ResultArea() {
     defaultAxios.get("/tsundokus").then((res) => {
       setTsumis(res.data);
     });
+    defaultAxios.get("/tags").then((res) => {
+      setTags(res.data);
+    });
   }, []);
 
   useEffect(() => {
-    // タグ一覧
-    const allTags: TagObject[] = tsumis
-      .map((element: TsumiObject) => {
-        return element.tags;
-      })
-      .flat()
-      .reduce((a: TagObject[], v: TagObject) => {
-        if (v && !a.includes(v)) {
-          a.push(v);
-        }
-        return a;
-      }, []);
-    setTags(allTags);
-    const tsumisFilterd = allTags.map((i) => {
+    const tsumisFilterd = tags.map((i) => {
       return tsumis.filter((tsumi: TsumiObject) =>
         tsumi.tags.some((t) => t.id === i.id)
       );
     });
     setTsumisByTag(tsumisFilterd);
-  }, [tsumis]);
+  }, [tags, tsumis]);
 
   const next = () => {
     if (mainSlider !== undefined) {
