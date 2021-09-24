@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import defaultAxios from "../utils/defaultAxios";
 import { TsumiObject } from "./tsumi";
 
 function Recommend() {
@@ -10,18 +11,12 @@ function Recommend() {
   const [site, setSite] = useState<TsumiObject>();
 
   useEffect(() => {
-    axios
-      .get("https://tsuntsun-api.herokuapp.com/api/users/1/tsundokus")
-      .then((res) => {
-        const recBook = res.data.find(
-          (t: TsumiObject) => t.category === "book"
-        );
-        setBook(recBook);
-        const recSite = res.data.find(
-          (t: TsumiObject) => t.category === "site"
-        );
-        setSite(recSite);
-      });
+    defaultAxios.get("/tsundokus").then((res) => {
+      const recBook = res.data.find((t: TsumiObject) => t.category === "book");
+      setBook(recBook);
+      const recSite = res.data.find((t: TsumiObject) => t.category === "site");
+      setSite(recSite);
+    });
   }, []);
   return (
     <RecommendBox className="recommend">

@@ -8,6 +8,7 @@ import Recommend from "../component/recommend";
 import ResultArea from "../component/resultArea";
 import SearchArea from "../component/searchArea";
 import { useAuth } from "../contexts/AuthContext";
+import defaultAxios from "../utils/defaultAxios";
 
 function Main() {
   const auth = useAuth();
@@ -25,11 +26,9 @@ function Main() {
 
     bodyFormData.append("id_token", idToken);
     bodyFormData.append("access_token", accessToken);
-    axios
-      .post("https://tsuntsun-api.herokuapp.com/api/line_login", bodyFormData)
-      .then((res) => {
-        setName(res.data.name);
-      });
+    defaultAxios.post("/line_login", bodyFormData).then((res) => {
+      setName(res.data.name);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
