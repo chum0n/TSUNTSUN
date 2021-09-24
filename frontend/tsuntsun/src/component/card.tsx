@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Tsumi, { TsumiObject } from "./tsumi";
+import { CgCoffee } from "react-icons/cg";
 
 const Card: React.FC<{
   name: string;
@@ -16,14 +17,18 @@ const Card: React.FC<{
   }, [page, tsumis]);
 
   return (
-    <div>
-      <h2>{name}</h2>
+    <CardBase>
+      <div>
+        <h2>{name}</h2>
+        <PageDisplay>
+          {isLastPage ? tsumis.length : page * 10}
+          <Space>/</Space>
+          <NumBig>{tsumis.length}</NumBig>
+          <Space>件</Space>
+        </PageDisplay>
+      </div>
       {tsumis.length !== 0 ? (
         <div>
-          <div>
-            {isLastPage ? tsumis.length : page * 10}/
-            <NumBig>{tsumis.length}</NumBig>件
-          </div>
           {tsumis.map((tsumi) => (
             <Tsumi
               key={tsumi.id}
@@ -47,13 +52,37 @@ const Card: React.FC<{
           </div>
         </div>
       ) : (
-        <div>なし</div>
+        !isHist && (
+          <>
+            <div>全部読みました！お疲れ様です。</div>
+            <div>
+              一息ついて、新しい出会いを探しにいきましょう
+              <CgCoffee />
+            </div>
+          </>
+        )
       )}
-    </div>
+    </CardBase>
   );
 };
 
 export default Card;
+
+const CardBase = styled.div`
+  position: relative;
+  width: 700px;
+  min-height: 7000px;
+  padding: 20px;
+  margin: 10px auto;
+  background-color: white;
+  border-radius: 10px;
+`;
+
+const PageDisplay = styled.div`
+  position: absolute;
+  top: 40px;
+  right: 100px;
+`;
 
 const NumBig = styled.span`
   font-size: 24px;
@@ -61,10 +90,15 @@ const NumBig = styled.span`
   line-height: 28px;
 `;
 
+const Space = styled.span`
+  margin: 4px;
+`;
+
 const PagenationButton = styled.button`
+  cursor: pointer;
   background-color: transparent;
   border: none;
-  cursor: pointer;
+
   :hover {
     color: #9ab85d;
   }

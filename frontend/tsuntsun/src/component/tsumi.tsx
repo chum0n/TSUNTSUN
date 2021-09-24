@@ -1,4 +1,11 @@
 import styled from "styled-components";
+import {
+  RiCalendar2Fill,
+  RiCalendarCheckFill,
+  RiTimerLine,
+  RiCheckLine,
+  RiExternalLinkLine,
+} from "react-icons/ri";
 import Button from "./button";
 import Tag from "./tag";
 const mojs = require("@mojs/core");
@@ -80,56 +87,60 @@ const Tsumi: React.FC<
   deleteFunc,
   isHist,
 }) => {
-  const today = new Date();
   return (
     <Article key={id}>
       <ContentWrap>
-        <Title>{url === "" ? title : <a href={url}>{title}</a>}</Title>
+        <Title>
+          {url === "" ? (
+            title
+          ) : (
+            <NoStyleLink href={url} target="_blank" rel="noopener noreferrer">
+              {title}
+              <ExternalIcon>
+                <RiExternalLinkLine size="0.8em" />
+              </ExternalIcon>
+            </NoStyleLink>
+          )}
+        </Title>
         <StatusBlack>
           <Status>
-            <NumBig>
-              {createdAt &&
-                Math.floor(
-                  (today.getTime() - Date.parse(createdAt)) / 86400000
-                )}
-            </NumBig>
-            日経過
+            <Icon>
+              <RiCalendar2Fill size="1.5rem" />
+            </Icon>
+            {createdAt && subDate(createdAt) < 0 && (
+              <>
+                <NumBig>{-subDate(createdAt)}</NumBig>日前
+              </>
+            )}
+            {createdAt && subDate(createdAt) === 0 && <>本日</>}
+          </Status>
+          <Status>
+            <Icon>
+              <RiCalendarCheckFill size="1.5rem" />
+            </Icon>
+            {deadline && subDate(deadline) !== 0 && (
+              <>
+                {subDate(deadline) > 0 && "あと"}
+                <NumBig>{Math.abs(subDate(deadline))}</NumBig>日
+                {subDate(deadline) < 0 && "経過"}
+              </>
+            )}
+            {deadline && subDate(deadline) === 0 && <p>本日</p>}
           </Status>
           <Status>
             {requiredTime && (
               <>
+                <Icon>
+                  <RiTimerLine size="1.5rem" />
+                </Icon>
                 <NumBig>{requiredTime}</NumBig>
-                で読める
+                分で読める
               </>
             )}
           </Status>
-          <Status>
-            {deadline ? (
-              <>
-                {Math.floor(
-                  (Date.parse(deadline) - today.getTime()) / 86400000
-                ) >= 0
-                  ? "あと"
-                  : ""}
-                <NumBig>
-                  {Math.abs(
-                    Math.floor(
-                      (Date.parse(deadline) - today.getTime()) / 86400000
-                    )
-                  )}
-                </NumBig>
-                日
-                {Math.floor(
-                  (Date.parse(deadline) - today.getTime()) / 86400000
-                ) < 0
-                  ? "経過"
-                  : ""}
-              </>
-            ) : null}
-          </Status>
         </StatusBlack>
         <StatusBlack>
-          {tags.map((t) => (
+          {[{ id: 1, name: "aaa" }].map((t) => (
             <Tag key={t.id} name={t.name}></Tag>
           ))}
         </StatusBlack>
@@ -143,40 +154,76 @@ const Tsumi: React.FC<
           }
         }}
       >
+        <RiCheckLine />
         {isHist ? "戻す" : "読んだ"}
       </Button>
     </Article>
   );
 };
 
+const subDate: (date: string) => number = (date) => {
+  const today = new Date();
+  return Math.floor((Date.parse(date) - today.getTime()) / 86400000);
+};
+
 export default Tsumi;
 
 const Title = styled.h3`
+  margin-left: 8px;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 27px;
   text-align: left;
 `;
 
 const Article = styled.article`
   display: flex;
   align-items: center;
-  max-width: 700px;
-  margin: 20px auto;
+  max-width: 600px;
   padding: 20px 0;
+  margin: 20px auto;
+  font-size: 14px;
   border-bottom: 0.5px solid #b9b9b9;
+`;
+
+const NoStyleLink = styled.a`
+  color: inherit;
+  text-decoration: none;
+
+  :hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
+const Icon = styled.div`
+  display: inline-flex;
+  margin-right: 10px;
+  color: #30371f;
+`;
+
+const ExternalIcon = styled.div`
+  display: inline-flex;
+  margin-left: 4px;
+  color: #30371f;
 `;
 
 const StatusBlack = styled.div`
   display: flex;
+  margin-bottom: 18px;
 `;
 
 const Status = styled.div`
-  display: inline-block;
-  width: 30%;
-  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  width: 25%;
   margin: 4px;
+  text-align: left;
 `;
 
 const NumBig = styled.span`
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 400;
   line-height: 28px;
 `;

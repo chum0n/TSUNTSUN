@@ -1,0 +1,18 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-config-recess-order"],
+  "rules": {
+    "string-quotes": "double",
+    "color-hex-case": "lower",
+    "color-hex-length": "long",
+    "selector-combinator-space-after": "always",
+    "declaration-block-trailing-semicolon": "always",
+    "comment-whitespace-inside": "always",
+    "declaration-colon-space-before": null,
+    "selector-pseudo-class-parentheses-space-inside": "always",
+    "media-feature-range-operator-space-before": "always",
+    "media-feature-range-operator-space-after": "always",
+    "media-feature-parentheses-space-inside": "always",
+    "media-feature-colon-space-before": "always",
+    "media-feature-colon-space-after": "always"
+  }
+}
