@@ -42,7 +42,7 @@ func Init() {
 	// LINE
 	// ログイン
 	e.POST("/api/line_login", func(c echo.Context) error {
-		user, err := authMiddleware.AuthUser(c.FormValue("access_token"), userController)
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
 			return err
 		}
@@ -59,12 +59,12 @@ func Init() {
 
 	// ログアウト
 	e.POST("/api/line_logout", func(c echo.Context) error {
-		accessToken := c.FormValue("access_token")
+		accessToken := c.Request().Header.Get("Authorization")
 
 		revokeRequestBody := &body.RevokeRequestBody{
 			ClientID:      os.Getenv("CHANNEL_ID"),
 			ClientSercret: os.Getenv("CHANNEL_SECRET"),
-			AccessToken:   accessToken,
+			AccessToken:   accessToken[7:],
 		}
 
 		revokeJsonString, err := json.Marshal(revokeRequestBody)
