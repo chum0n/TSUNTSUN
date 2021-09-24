@@ -5,10 +5,12 @@ import Login from "./pages/login";
 import AfterLogin from "./pages/afterLogin";
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./component/Auth/PrivateRoute";
+import styled from "styled-components";
+import Color from "./const/Color";
 
 function App() {
   return (
-    <div className="App">
+    <Body className="App">
       <AuthProvider>
         <Router>
           <Switch>
@@ -24,8 +26,13 @@ function App() {
           </Switch>
         </Router>
       </AuthProvider>
-    </div>
+    </Body>
   );
 }
 
 export default App;
+
+const Body = styled.div`
+  color: ${Color.FONT};
+  background-color: ${Color.BACKGROUND};
+`;
