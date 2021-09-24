@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
+import { RiSettings3Fill, RiLogoutBoxRLine } from "react-icons/ri";
+import AddButton from "./addButton";
 
 const Header: React.FC<{
   name?: string;
@@ -26,10 +28,14 @@ const Header: React.FC<{
           style={{ height: "40px" }}
         ></img>
       </Logo>
-      <div>
-        {name ? name + "さん、こんにちは" : ""}　設定
-        <LogoutButton onClick={() => logout()}>ログアウト</LogoutButton>
-      </div>
+      <Center>
+        <AddButton />
+        {name ? name + "さん、こんにちは" : ""}
+        <RiSettings3Fill size={"2rem"} />
+        <LogoutButton onClick={() => logout()}>
+          <RiLogoutBoxRLine size={"2rem"} />
+        </LogoutButton>
+      </Center>
     </HeaderBase>
   );
 };
@@ -37,11 +43,18 @@ const Header: React.FC<{
 export default Header;
 
 const HeaderBase = styled.header`
-  background: #eaf5d3;
-  height: 65px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  height: 65px;
+  padding: 0 10%;
+  background: #eaf5d3;
+`;
+
+const Center = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const Logo = styled.a`
@@ -49,6 +62,6 @@ const Logo = styled.a`
 `;
 
 const LogoutButton = styled.button`
-  border: none;
   background-color: transparent;
+  border: none;
 `;

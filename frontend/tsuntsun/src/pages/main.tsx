@@ -1,8 +1,5 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import AddButton from "../component/addButton";
 import Header from "../component/header";
 import Recommend from "../component/recommend";
 import ResultArea from "../component/resultArea";
@@ -37,7 +34,6 @@ function Main() {
       <Body>
         <div className="main">
           <Recommend />
-          <AddButton />
           <SearchArea />
           <ResultArea />
         </div>

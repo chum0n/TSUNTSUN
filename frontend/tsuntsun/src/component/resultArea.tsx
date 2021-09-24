@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import defaultAxios from "../utils/defaultAxios";
 import { TagObject, TsumiObject } from "./tsumi";
+import Color from "../const/Color";
 
 function ResultArea() {
   const [nav, setNav] = useState<Slider>();
@@ -24,7 +25,7 @@ function ResultArea() {
     swipe: true,
     focusOnSelect: true,
     speed: 500,
-    centerPadding: "160px",
+    centerPadding: "170px",
     slidesToShow: 1,
     slidesToScroll: 1,
   };
@@ -68,6 +69,17 @@ function ResultArea() {
     setTsumisByTag(tsumisFilterd);
   }, [tsumis]);
 
+  const next = () => {
+    if (mainSlider !== undefined) {
+      mainSlider.slickNext();
+    }
+  };
+  const previous = () => {
+    if (mainSlider !== undefined) {
+      mainSlider.slickPrev();
+    }
+  };
+
   const deleteFunc = (id: number) => {
     const willDelete = tsumis.find((t) => t.id === id);
     if (willDelete) {
@@ -82,7 +94,7 @@ function ResultArea() {
   };
 
   return (
-    <div className="result-area">
+    <div className="result-area" style={{ position: "relative" }}>
       <ResultTop>
         <FixedNavArea>
           <Nav
@@ -113,7 +125,10 @@ function ResultArea() {
           </Slider>
         </NavArea>
       </ResultTop>
-
+      <FixedDiv>
+        <MoveButton onClick={() => previous()}>{"<"}</MoveButton>
+        <MoveButton onClick={() => next()}>{">"}</MoveButton>
+      </FixedDiv>
       <Slider
         className="slider"
         {...settings}
@@ -153,45 +168,68 @@ function ResultArea() {
 export default ResultArea;
 
 const ResultTop = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 30px auto;
-  padding: 10px;
-  text-align: center;
   position: sticky;
   top: 0;
-  background-color: white;
   z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  margin: 0 auto;
+  text-align: center;
+  background-color: ${Color.BACKGROUND};
 
-  .slick-prev:before,
-  .slick-next:before {
+  .slick-prev::before,
+  .slick-next::before {
     color: #9ab85d;
   }
 `;
 
 const FixedNavArea = styled.div`
-  border-right: 0.1px solid black;
   padding-right: 20px;
   margin-right: 50px;
+  background-color: ${Color.BACKGROUND};
+  border-right: 0.1px solid black;
 `;
 
 const NavArea = styled.div`
   display: inline-block;
   width: 500px;
+  background-color: ${Color.BACKGROUND};
 `;
 
 const Nav = styled.button`
   width: 100px;
   font-size: 22px;
-  background-color: white;
-  border: 0px;
+  background-color: ${Color.BACKGROUND};
+  border: 0;
   border-bottom: 2px solid transparent;
+
   :hover {
     border-bottom: 2px solid #9ab85d;
   }
+
   .slick-current &,
   &.current {
     font-weight: bold;
     border-bottom: 2px solid #9ab85d;
   }
+`;
+
+const FixedDiv = styled.div`
+  position: -webkit-sticky;
+  position: sticky;
+  top: 50vh;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 calc(40vw - 400px - 16px);
+`;
+const MoveButton = styled.button`
+  appearance: none;
+  font-size: 36px;
+  font-weight: 700;
+  color: ${Color.DARK};
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
 `;
