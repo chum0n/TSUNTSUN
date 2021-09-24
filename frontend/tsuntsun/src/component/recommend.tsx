@@ -26,7 +26,7 @@ function Recommend() {
       </TitleArea>
       <BodyArea>
         <OneRecommend>
-          <RiBookFill />
+          <RiComputerLine />
           {<a href={site?.url}>{site?.title}</a>}
           {site?.requiredTime && (
             <>
@@ -36,7 +36,7 @@ function Recommend() {
           )}
         </OneRecommend>
         <OneRecommend>
-          <RiComputerLine />
+          <RiBookFill />
           {book?.title}
           {book?.deadline && (
             <>
