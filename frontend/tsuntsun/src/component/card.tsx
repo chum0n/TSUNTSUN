@@ -64,7 +64,7 @@ const CardBase = styled.div`
   width: 700px;
   min-height: 7000px;
   padding: 20px;
-  margin: 0 auto;
+  margin: 10px auto;
   background-color: white;
   border-radius: 10px;
 `;

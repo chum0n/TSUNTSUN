@@ -69,6 +69,17 @@ function ResultArea() {
     setTsumisByTag(tsumisFilterd);
   }, [tsumis]);
 
+  const next = () => {
+    if (mainSlider !== undefined) {
+      mainSlider.slickNext();
+    }
+  };
+  const previous = () => {
+    if (mainSlider !== undefined) {
+      mainSlider.slickPrev();
+    }
+  };
+
   const deleteFunc = (id: number) => {
     const willDelete = tsumis.find((t) => t.id === id);
     if (willDelete) {
@@ -83,7 +94,7 @@ function ResultArea() {
   };
 
   return (
-    <div className="result-area">
+    <div className="result-area" style={{ position: "relative" }}>
       <ResultTop>
         <FixedNavArea>
           <Nav
@@ -114,7 +125,10 @@ function ResultArea() {
           </Slider>
         </NavArea>
       </ResultTop>
-
+      <FixedDiv>
+        <MoveButton onClick={() => previous()}>{"<"}</MoveButton>
+        <MoveButton onClick={() => next()}>{">"}</MoveButton>
+      </FixedDiv>
       <Slider
         className="slider"
         {...settings}
@@ -159,9 +173,10 @@ const ResultTop = styled.div`
   z-index: 1;
   display: flex;
   justify-content: center;
-  padding: 10px;
-  margin: 30px auto;
+  padding: 40px 0;
+  margin: 0 auto;
   text-align: center;
+  background-color: ${Color.BACKGROUND};
 
   .slick-prev::before,
   .slick-next::before {
@@ -172,12 +187,14 @@ const ResultTop = styled.div`
 const FixedNavArea = styled.div`
   padding-right: 20px;
   margin-right: 50px;
+  background-color: ${Color.BACKGROUND};
   border-right: 0.1px solid black;
 `;
 
 const NavArea = styled.div`
   display: inline-block;
   width: 500px;
+  background-color: ${Color.BACKGROUND};
 `;
 
 const Nav = styled.button`
@@ -196,4 +213,23 @@ const Nav = styled.button`
     font-weight: bold;
     border-bottom: 2px solid #9ab85d;
   }
+`;
+
+const FixedDiv = styled.div`
+  position: -webkit-sticky;
+  position: sticky;
+  top: 50vh;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 calc(40vw - 400px - 16px);
+`;
+const MoveButton = styled.button`
+  appearance: none;
+  font-size: 36px;
+  font-weight: 700;
+  color: ${Color.DARK};
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
 `;
