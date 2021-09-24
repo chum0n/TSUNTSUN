@@ -7,7 +7,7 @@ const createAxiosInstance = () => {
   });
 
   axiosInstance.interceptors.request.use((request) => {
-    request.headers["Authorization"] = "Bearer:" + accessToken();
+    request.headers["Authorization"] = "Bearer " + accessToken();
     console.log("request");
     console.dir(request);
     return request;
