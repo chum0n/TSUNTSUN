@@ -38,6 +38,7 @@ export default Header;
 
 const HeaderBase = styled.header`
   background: #eaf5d3;
+  padding: 0 10%;
   height: 65px;
   display: flex;
   justify-content: space-between;
