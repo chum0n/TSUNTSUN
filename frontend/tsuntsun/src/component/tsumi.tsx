@@ -140,7 +140,7 @@ const Tsumi: React.FC<
           </Status>
         </StatusBlack>
         <StatusBlack>
-          {[{ id: 1, name: "aaa" }].map((t) => (
+          {tags.map((t) => (
             <Tag key={t.id} name={t.name}></Tag>
           ))}
         </StatusBlack>
