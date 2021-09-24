@@ -4,9 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"net/url"
 	"os"
 	"strconv"
 
@@ -14,6 +12,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/interfaces/controllers"
+	authMiddleware "github.com/yot-sailing/TSUNTSUN/middleware"
 )
 
 func Init() {
@@ -43,68 +42,11 @@ func Init() {
 	// LINE
 	// ログイン
 	e.POST("/api/line_login", func(c echo.Context) error {
-		idToken := c.FormValue("id_token")
-		accessToken := c.FormValue("access_token")
-
-		// アクセストークンの有効性確認
-		accessTokenStatus, accessTokenResponse := VerifyAccessToken(accessToken)
-		if accessTokenStatus != 200 {
-			fmt.Println("アクセストークンが有効でありません。")
-			return c.JSON(accessTokenStatus, accessTokenResponse)
-		}
-
-		// LINEのユーザー情報を取得
-		verifyRequestBody := &body.VerifyRequestBody{
-			IDToken:  idToken,
-			ClientID: os.Getenv("CHANNEL_ID"),
-		}
-
-		verifyJsonString, err := json.Marshal(verifyRequestBody)
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println("router.goのverifyReqBody", verifyRequestBody)
-		fmt.Println("router.goのverifyJSON", verifyJsonString)
-
-		// endpoint := "https://api.line.me/oauth2/v2.1/verify"
-		// req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(verifyJsonString))
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-		// req.Header.Set("Content-Type", "application/json")
-
-		// client := new(http.Client)
-		// resp, err := client.Do(req)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-		url_target := "https://api.line.me/oauth2/v2.1/verify"
-		args := url.Values{}
-		args.Add("id_token", idToken)
-		args.Add("client_id", os.Getenv("CHANNEL_ID"))
-		fmt.Println("id_token", idToken)
-		fmt.Println("client_id", os.Getenv("CHANNEL_ID"))
-		resp, err := http.PostForm(url_target, args)
-		if err != nil {
-			fmt.Println("Request error:", err)
 			return err
 		}
-		defer resp.Body.Close()
 
-		fmt.Println("router.goのresp", resp)
-		byteArray, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Println(err)
-		}
-		var verifyResponseBody body.VerifyResponseBody
-		err = json.Unmarshal(byteArray, &verifyResponseBody)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		fmt.Println("router.goのuserLine", verifyResponseBody)
-		// 該当のLINEユーザーIDを持つユーザーが存在すればその情報を取得。存在しなければ作成したのちその情報を取得。
-		user := userController.PrepareUser(verifyResponseBody)
 		userExcludeLine := body.UesrExcludeLine{
 			ID:        user.ID,
 			Name:      user.Name,
@@ -116,13 +58,13 @@ func Init() {
 	})
 
 	// ログアウト
-	e.POST("line_logout", func(c echo.Context) error {
-		accessToken := c.FormValue("access_token")
+	e.POST("/api/line_logout", func(c echo.Context) error {
+		accessToken := c.Request().Header.Get("Authorization")
 
 		revokeRequestBody := &body.RevokeRequestBody{
 			ClientID:      os.Getenv("CHANNEL_ID"),
 			ClientSercret: os.Getenv("CHANNEL_SECRET"),
-			AccessToken:   accessToken,
+			AccessToken:   accessToken[7:],
 		}
 
 		revokeJsonString, err := json.Marshal(revokeRequestBody)
@@ -167,29 +109,26 @@ func Init() {
 	})
 
 	// ユーザー削除
-	e.DELETE("/api/users/:id", func(c echo.Context) error {
-		id := c.Param("id")
-		// intに変換
-		userID, err := strconv.Atoi(id)
+	e.DELETE("/api/users", func(c echo.Context) error {
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
-		userController.Delete(userID)
+		userController.Delete(user.ID)
 		return c.String(http.StatusOK, "deleted")
 	})
 
 	// 積読全取得
-	e.GET("api/users/:userID/tsundokus", func(c echo.Context) error {
-		str_userID := c.Param("userID")
-		// intに変換
-		userID, err := strconv.Atoi(str_userID)
+	e.GET("api/tsundokus", func(c echo.Context) error {
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
-		tsundokus := tsundokuController.GetTsundoku(userID)
+
+		tsundokus := tsundokuController.GetTsundoku(user.ID)
 		c.Bind(&tsundokus)
 		for i, tsundoku := range tsundokus {
-			tsundokuTags := tsundokuTagController.GetTsundokuTagsByTsundokuIDandUserID(tsundoku.ID, userID)
+			tsundokuTags := tsundokuTagController.GetTsundokuTagsByTsundokuIDandUserID(tsundoku.ID, user.ID)
 			var tagIDs []int
 			for _, tsundokuTag := range tsundokuTags {
 				tagIDs = append(tagIDs, tsundokuTag.TagID)
@@ -200,26 +139,19 @@ func Init() {
 	})
 
 	// 積読追加
-	e.POST("api/users/:userID/tsundokus", func(c echo.Context) error {
-		str_userID := c.Param("userID")
-		// intに変換
-		userID, err := strconv.Atoi(str_userID)
+	e.POST("api/tsundokus", func(c echo.Context) error {
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
-		tsundokuController.CreateTsundoku(c, userID)
+		tsundokuController.CreateTsundoku(c, user.ID)
 		return c.String(http.StatusOK, "created tsundoku")
 	})
 
 	// 積読削除
-	e.DELETE("api/users/:userID/tsundokus/:tsundokuID", func(c echo.Context) error {
-		// str_userID := c.Param("userID")
+	// TODO:ユーザーが管理しているかの判定
+	e.DELETE("api/tsundokus/:tsundokuID", func(c echo.Context) error {
 		str_tsundokuID := c.Param("tsundokuID")
-		// intに変換
-		// userID, err := strconv.Atoi(str_userID)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
 		tsundokuID, err := strconv.Atoi(str_tsundokuID)
 		if err != nil {
 			fmt.Println(err)
@@ -229,30 +161,26 @@ func Init() {
 	})
 
 	// ある時間以内に読める本を取得
-	e.GET("api/users/:userID/time/:time", func(c echo.Context) error {
-		str_userID := c.Param("userID")
-		// intに変換
-		userID, err := strconv.Atoi(str_userID)
+	e.GET("api/time/:time", func(c echo.Context) error {
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 		total_min, _ := strconv.Atoi(c.Param("time"))
-		tsundokus := tsundokuController.GetFreeTsundoku(c, userID, total_min)
+		tsundokus := tsundokuController.GetFreeTsundoku(c, user.ID, total_min)
 		c.Bind(&tsundokus)
 		return c.JSON(http.StatusOK, tsundokus)
 	})
 
 	// ユーザーが管理するタグ全取得
-	e.GET("api/users/:userID/tags", func(c echo.Context) error {
-		str_userID := c.Param("userID")
-		// intに変換
-		userID, err := strconv.Atoi(str_userID)
+	e.GET("api/tags", func(c echo.Context) error {
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 
 		// TsundokuTagテーブルのユーザーの管理下のものを取得
-		tsundokuTags := tsundokuTagController.GetTsundokuTags(userID)
+		tsundokuTags := tsundokuTagController.GetTsundokuTags(user.ID)
 		var tagIDs []int
 		for _, tsundokuTag := range tsundokuTags {
 			tagIDs = append(tagIDs, tsundokuTag.TagID)
@@ -264,20 +192,20 @@ func Init() {
 	})
 
 	// ユーザーが管理する積読についているタグ全取得
-	e.GET("api/users/:userID/tsundokus/:tsundokuID/tags", func(c echo.Context) error {
-		str_userID := c.Param("userID")
-		str_tsundokuID := c.Param("tsundokuID")
-		// intに変換
-		userID, err := strconv.Atoi(str_userID)
+	e.GET("api/tsundokus/:tsundokuID/tags", func(c echo.Context) error {
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
 		if err != nil {
-			fmt.Println(err)
-		}
-		tsundokuID, err := strconv.Atoi(str_tsundokuID)
-		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 
-		tsundokuTags := tsundokuTagController.GetTsundokuTagsByTsundokuIDandUserID(tsundokuID, userID)
+		str_tsundokuID := c.Param("tsundokuID")
+		// intに変換
+		tsundokuID, err := strconv.Atoi(str_tsundokuID)
+		if err != nil {
+			return err
+		}
+
+		tsundokuTags := tsundokuTagController.GetTsundokuTagsByTsundokuIDandUserID(tsundokuID, user.ID)
 		var tagIDs []int
 		for _, tsundokuTag := range tsundokuTags {
 			tagIDs = append(tagIDs, tsundokuTag.TagID)
@@ -289,36 +217,31 @@ func Init() {
 	})
 
 	// タグ追加
-	e.POST("api/users/:userID/tsundokus/:tsundokuID/tags", func(c echo.Context) error {
-		str_userID := c.Param("userID")
+	e.POST("api/tsundokus/:tsundokuID/tags", func(c echo.Context) error {
+		user, err := authMiddleware.AuthUser(c.Request().Header.Get("Authorization"), userController)
+		if err != nil {
+			return err
+		}
+
 		str_tsundokuID := c.Param("tsundokuID")
 		// intに変換
-		userID, err := strconv.Atoi(str_userID)
-		if err != nil {
-			fmt.Println(err)
-		}
 		tsundokuID, err := strconv.Atoi(str_tsundokuID)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 
 		// Tagsテーブルにレコードを追加
-		tagID := tagController.CreateTag(c, userID)
+		tagID := tagController.CreateTag(c, user.ID)
 		// TsundokuTagsテーブルにレコードを追加
-		tsundokuTagController.CreateTsundokuTag(c, tsundokuID, userID, tagID)
+		tsundokuTagController.CreateTsundokuTag(c, tsundokuID, user.ID, tagID)
 
 		return c.JSON(http.StatusOK, "created tag")
 	})
 
 	// タグ削除
-	e.DELETE("api/users/:userID/tsundokus/:tsundokuID/tags/:tagID", func(c echo.Context) error {
-		// str_userID := c.Param("userID")
+	// TODO:ユーザーが管理しているかの判定
+	e.DELETE("api/tsundokus/:tsundokuID/tags/:tagID", func(c echo.Context) error {
 		str_tagID := c.Param("tagID")
-		// intに変換
-		// userID, err := strconv.Atoi(str_userID)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
 		tagID, err := strconv.Atoi(str_tagID)
 		if err != nil {
 			fmt.Println(err)

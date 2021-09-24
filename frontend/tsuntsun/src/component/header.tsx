@@ -1,19 +1,16 @@
 import styled from "styled-components";
+import { useAuth } from "../contexts/AuthContext";
 
 const Header: React.FC<{
   name?: string;
 }> = ({ name }) => {
-  const logout = () => {
-    window.location.href = "https://tsuntsun.herokuapp.com/login";
-    // axios
-    //   .get("https://tsuntsun-api.herokuapp.com/api/line_logout")
-    //   .then((res) => {
-    //     console.log(res);
-    //     window.location.href = "https://tsuntsun.herokuapp.com/login";
-    //   })
-    //   .catch((res) => {
-    //     console.log(res);
-    //   });
+  const auth = useAuth();
+  const logout = async () => {
+    await auth.logout();
+    const isLoggedIn = await auth.isLoggedIn();
+    if (!isLoggedIn) {
+      window.location.href = "https://tsuntsun.herokuapp.com/login";
+    }
   };
   return (
     <HeaderBase className="header">

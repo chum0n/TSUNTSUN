@@ -1,7 +1,6 @@
 package database
 
 import (
-	"github.com/yot-sailing/TSUNTSUN/body"
 	"github.com/yot-sailing/TSUNTSUN/domain"
 )
 
@@ -19,13 +18,13 @@ func (db *UserRepository) Select() []domain.User {
 	return users
 }
 
-func (db *UserRepository) Prepare(userLine body.VerifyResponseBody) domain.User {
+func (db *UserRepository) Prepare(userID string, userName string) domain.User {
 	user := domain.User{}
 	newUser := domain.User{
-		Name:   userLine.Name,
-		LINEID: userLine.Sub,
+		Name:   userName,
+		LINEID: userID,
 	}
-	affect := db.FindOrCreateUser(&user, &newUser, userLine)
+	affect := db.FindOrCreateUser(&user, &newUser)
 	if affect == 0 {
 		return newUser
 	}
