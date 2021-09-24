@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { RiCalendar2Fill } from "react-icons/ri";
 import Button from "./button";
 import Tag from "./tag";
 const mojs = require("@mojs/core");
@@ -80,7 +81,6 @@ const Tsumi: React.FC<
   deleteFunc,
   isHist,
 }) => {
-  const today = new Date();
   return (
     <Article key={id}>
       <ContentWrap>
@@ -89,13 +89,13 @@ const Tsumi: React.FC<
         </Title>
         <StatusBlack>
           <Status>
-            <NumBig>
-              {createdAt &&
-                Math.floor(
-                  (today.getTime() - Date.parse(createdAt)) / 86400000
-                )}
-            </NumBig>
-            日経過
+            {createdAt && subDate(createdAt) < 0 && (
+              <>
+                <NumBig>{-subDate(createdAt)}</NumBig>
+                日経過
+              </>
+            )}
+            {createdAt && subDate(createdAt) === 0 && <>本日</>}
           </Status>
           <Status>
             {requiredTime && (
@@ -106,28 +106,14 @@ const Tsumi: React.FC<
             )}
           </Status>
           <Status>
-            {deadline ? (
+            {deadline && subDate(deadline) !== 0 && (
               <>
-                {Math.floor(
-                  (Date.parse(deadline) - today.getTime()) / 86400000
-                ) >= 0
-                  ? "あと"
-                  : ""}
-                <NumBig>
-                  {Math.abs(
-                    Math.floor(
-                      (Date.parse(deadline) - today.getTime()) / 86400000
-                    )
-                  )}
-                </NumBig>
-                日
-                {Math.floor(
-                  (Date.parse(deadline) - today.getTime()) / 86400000
-                ) < 0
-                  ? "経過"
-                  : ""}
+                {subDate(deadline) > 0 && "あと"}
+                <NumBig>{Math.abs(subDate(deadline))}</NumBig>日
+                {subDate(deadline) < 0 && "経過"}
               </>
-            ) : null}
+            )}
+            {deadline && subDate(deadline) === 0 && <p>本日</p>}
           </Status>
         </StatusBlack>
         <StatusBlack>
@@ -149,6 +135,11 @@ const Tsumi: React.FC<
       </Button>
     </Article>
   );
+};
+
+const subDate: (date: string) => number = (date) => {
+  const today = new Date();
+  return Math.floor((Date.parse(date) - today.getTime()) / 86400000);
 };
 
 export default Tsumi;
