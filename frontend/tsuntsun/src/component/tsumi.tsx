@@ -159,8 +159,8 @@ const Article = styled.article`
   display: flex;
   align-items: center;
   max-width: 700px;
-  margin: 20px auto;
   padding: 20px 0;
+  margin: 20px auto;
   border-bottom: 0.5px solid #b9b9b9;
 `;
 
@@ -171,8 +171,8 @@ const StatusBlack = styled.div`
 const Status = styled.div`
   display: inline-block;
   width: 30%;
-  text-align: left;
   margin: 4px;
+  text-align: left;
 `;
 
 const NumBig = styled.span`

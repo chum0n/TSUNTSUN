@@ -37,12 +37,12 @@ const Header: React.FC<{
 export default Header;
 
 const HeaderBase = styled.header`
-  background: #eaf5d3;
-  padding: 0 10%;
-  height: 65px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  height: 65px;
+  padding: 0 10%;
+  background: #eaf5d3;
 `;
 
 const Logo = styled.a`
@@ -50,6 +50,6 @@ const Logo = styled.a`
 `;
 
 const LogoutButton = styled.button`
-  border: none;
   background-color: transparent;
+  border: none;
 `;

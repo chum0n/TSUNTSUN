@@ -8,9 +8,9 @@ export default Tag;
 
 const NomalTag = styled.div`
   display: inline-block;
-  background: #f5f4f4;
-  border-radius: 19.5px;
   padding: 8px;
   margin: 4px;
   font-size: small;
+  background: #f5f4f4;
+  border-radius: 19.5px;
 `;

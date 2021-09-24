@@ -55,16 +55,16 @@ function Recommend() {
 export default Recommend;
 
 const RecommendBox = styled.div`
-  border: 6px dashed #9ab85d;
   box-sizing: border-box;
-  text-align: left;
-  padding-left: 16px;
-  padding-bottom: 16px;
   padding-right: 16px;
+  padding-bottom: 16px;
+  padding-left: 16px;
   margin: 16px auto;
+  text-align: left;
+  border: 6px dashed #9ab85d;
 `;
 
 const OneRecommend = styled.div`
-  font-size: large;
   margin: 8px 0;
+  font-size: large;
 `;

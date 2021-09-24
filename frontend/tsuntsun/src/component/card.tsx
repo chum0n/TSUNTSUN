@@ -62,9 +62,10 @@ const NumBig = styled.span`
 `;
 
 const PagenationButton = styled.button`
+  cursor: pointer;
   background-color: transparent;
   border: none;
-  cursor: pointer;
+
   :hover {
     color: #9ab85d;
   }

@@ -66,10 +66,10 @@ function SearchArea() {
 export default SearchArea;
 
 const Area = styled.div`
-  background: #eaf5d3;
   padding: 16px;
   padding-left: 48px;
   text-align: left;
+  background: #eaf5d3;
 `;
 
 const OneSearchArea = styled.div`

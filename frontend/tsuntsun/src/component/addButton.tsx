@@ -7,15 +7,16 @@ function AddButton() {
 export default AddButton;
 
 const Button = styled.button`
-  background: #9ab85d;
-  border: 0.5px solid #b9b9b9;
   box-sizing: border-box;
-  border-radius: 32px;
-  font-size: 36px;
-  line-height: 42px;
   padding: 16px 32px;
   margin: 16px auto;
+  font-size: 36px;
+  line-height: 42px;
   cursor: pointer;
+  background: #9ab85d;
+  border: 0.5px solid #b9b9b9;
+  border-radius: 32px;
+
   :hover {
     background: #7e974c;
   }

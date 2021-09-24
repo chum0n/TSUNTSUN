@@ -153,26 +153,26 @@ function ResultArea() {
 export default ResultArea;
 
 const ResultTop = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 30px auto;
-  padding: 10px;
-  text-align: center;
   position: sticky;
   top: 0;
-  background-color: white;
   z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  margin: 30px auto;
+  text-align: center;
+  background-color: white;
 
-  .slick-prev:before,
-  .slick-next:before {
+  .slick-prev::before,
+  .slick-next::before {
     color: #9ab85d;
   }
 `;
 
 const FixedNavArea = styled.div`
-  border-right: 0.1px solid black;
   padding-right: 20px;
   margin-right: 50px;
+  border-right: 0.1px solid black;
 `;
 
 const NavArea = styled.div`
@@ -184,11 +184,13 @@ const Nav = styled.button`
   width: 100px;
   font-size: 22px;
   background-color: white;
-  border: 0px;
+  border: 0;
   border-bottom: 2px solid transparent;
+
   :hover {
     border-bottom: 2px solid #9ab85d;
   }
+
   .slick-current &,
   &.current {
     font-weight: bold;
