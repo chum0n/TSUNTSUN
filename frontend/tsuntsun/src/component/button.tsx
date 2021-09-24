@@ -21,6 +21,7 @@ const NomalButton = styled.button`
   box-sizing: border-box;
   padding: 8px 16px;
   margin: 4px auto;
+  white-space: nowrap;
   cursor: pointer;
   background: #eaf5d3;
   border: 0.5px solid #b9b9b9;

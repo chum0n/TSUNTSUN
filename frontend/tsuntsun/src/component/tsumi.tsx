@@ -84,7 +84,9 @@ const Tsumi: React.FC<
   return (
     <Article key={id}>
       <ContentWrap>
-        <Title>{url === "" ? title : <a href={url}>{title}</a>}</Title>
+        <Title>
+          {url === "" ? title : <NoStyleLink href={url}>{title}</NoStyleLink>}
+        </Title>
         <StatusBlack>
           <Status>
             <NumBig>
@@ -99,7 +101,7 @@ const Tsumi: React.FC<
             {requiredTime && (
               <>
                 <NumBig>{requiredTime}</NumBig>
-                で読める
+                分で読める
               </>
             )}
           </Status>
@@ -158,10 +160,15 @@ const Title = styled.h3`
 const Article = styled.article`
   display: flex;
   align-items: center;
-  max-width: 700px;
+  max-width: 600px;
   padding: 20px 0;
   margin: 20px auto;
   border-bottom: 0.5px solid #b9b9b9;
+`;
+
+const NoStyleLink = styled.a`
+  color: inherit;
+  text-decoration: none;
 `;
 
 const StatusBlack = styled.div`
