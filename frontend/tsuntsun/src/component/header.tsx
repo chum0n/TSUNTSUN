@@ -23,7 +23,7 @@ const Header: React.FC<{
           style={{ height: "40px" }}
         ></img>
         <img
-          src={`${process.env.PUBLIC_URL}/tsuntsun.png`}
+          src={`${process.env.PUBLIC_URL}/textonly.png`}
           alt=""
           style={{ height: "40px" }}
         ></img>
