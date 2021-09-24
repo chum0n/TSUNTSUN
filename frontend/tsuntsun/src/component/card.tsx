@@ -70,7 +70,7 @@ const CardBase = styled.div`
 const PageDisplay = styled.div`
   position: absolute;
   top: 40px;
-  right: 30px;
+  right: 100px;
 `;
 
 const NumBig = styled.span`

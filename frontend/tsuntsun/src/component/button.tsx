@@ -19,12 +19,15 @@ export default Button;
 
 const NomalButton = styled.button`
   box-sizing: border-box;
+  display: flex;
   padding: 8px 16px;
   margin: 4px auto;
+  font-size: large;
   white-space: nowrap;
+  vertical-align: center;
   cursor: pointer;
   background: #eaf5d3;
-  border: 0.5px solid #b9b9b9;
+  border: none;
   border-radius: 32px;
 
   :hover {

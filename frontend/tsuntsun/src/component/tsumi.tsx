@@ -1,5 +1,10 @@
 import styled from "styled-components";
-import { RiCalendar2Fill } from "react-icons/ri";
+import {
+  RiCalendar2Fill,
+  RiCalendarCheckFill,
+  RiTimerLine,
+  RiCheckLine,
+} from "react-icons/ri";
 import Button from "./button";
 import Tag from "./tag";
 const mojs = require("@mojs/core");
@@ -89,23 +94,20 @@ const Tsumi: React.FC<
         </Title>
         <StatusBlack>
           <Status>
+            <Icon>
+              <RiCalendar2Fill size="1.5rem" />
+            </Icon>
             {createdAt && subDate(createdAt) < 0 && (
               <>
-                <NumBig>{-subDate(createdAt)}</NumBig>
-                日経過
+                <NumBig>{-subDate(createdAt)}</NumBig>日前
               </>
             )}
             {createdAt && subDate(createdAt) === 0 && <>本日</>}
           </Status>
           <Status>
-            {requiredTime && (
-              <>
-                <NumBig>{requiredTime}</NumBig>
-                分で読める
-              </>
-            )}
-          </Status>
-          <Status>
+            <Icon>
+              <RiCalendarCheckFill size="1.5rem" />
+            </Icon>
             {deadline && subDate(deadline) !== 0 && (
               <>
                 {subDate(deadline) > 0 && "あと"}
@@ -115,9 +117,20 @@ const Tsumi: React.FC<
             )}
             {deadline && subDate(deadline) === 0 && <p>本日</p>}
           </Status>
+          <Status>
+            {requiredTime && (
+              <>
+                <Icon>
+                  <RiTimerLine size="1.5rem" />
+                </Icon>
+                <NumBig>{requiredTime}</NumBig>
+                分で読める
+              </>
+            )}
+          </Status>
         </StatusBlack>
         <StatusBlack>
-          {tags.map((t) => (
+          {[{ id: 1, name: "aaa" }].map((t) => (
             <Tag key={t.id} name={t.name}></Tag>
           ))}
         </StatusBlack>
@@ -131,6 +144,7 @@ const Tsumi: React.FC<
           }
         }}
       >
+        <RiCheckLine />
         {isHist ? "戻す" : "読んだ"}
       </Button>
     </Article>
@@ -145,6 +159,11 @@ const subDate: (date: string) => number = (date) => {
 export default Tsumi;
 
 const Title = styled.h3`
+  margin-left: 8px;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 27px;
   text-align: left;
 `;
 
@@ -154,6 +173,7 @@ const Article = styled.article`
   max-width: 600px;
   padding: 20px 0;
   margin: 20px auto;
+  font-size: 14px;
   border-bottom: 0.5px solid #b9b9b9;
 `;
 
@@ -162,19 +182,27 @@ const NoStyleLink = styled.a`
   text-decoration: none;
 `;
 
+const Icon = styled.div`
+  display: inline-flex;
+  margin-right: 10px;
+  color: #30371f;
+`;
+
 const StatusBlack = styled.div`
   display: flex;
+  margin-bottom: 18px;
 `;
 
 const Status = styled.div`
-  display: inline-block;
-  width: 30%;
+  display: inline-flex;
+  align-items: center;
+  width: 25%;
   margin: 4px;
   text-align: left;
 `;
 
 const NumBig = styled.span`
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 400;
   line-height: 28px;
 `;
