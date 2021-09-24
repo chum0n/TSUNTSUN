@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Tsumi, { TsumiObject } from "./tsumi";
+import { CgCoffee } from "react-icons/cg";
 
 const Card: React.FC<{
   name: string;
@@ -51,7 +52,15 @@ const Card: React.FC<{
           </div>
         </div>
       ) : (
-        <div>なし</div>
+        !isHist && (
+          <>
+            <div>全部読みました！お疲れ様です。</div>
+            <div>
+              一息ついて、新しい出会いを探しにいきましょう
+              <CgCoffee />
+            </div>
+          </>
+        )
       )}
     </CardBase>
   );
