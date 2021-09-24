@@ -1,6 +1,6 @@
 {
   "name": "TSUNTSUN",
-  "version": "0.1.0",
+  "version": "1.0",
   "manifest_version": 3,
   "description": "TSUNTSUN 積みます",
   "homepage_url": "https://tsuntsun.herokuapp.com/",
@@ -14,6 +14,7 @@
   ],
   "action": {
     "default_title": "TSUNTSUN",
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_icon": "tsunmae.png"
   }
 }

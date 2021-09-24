@@ -4,8 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <script src="./jquery-3.6.0.min.js"></script>
-    <script src="./index.js"></script>
-    <link href="/index.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
     <style>
       body {
         width: 400px;
@@ -13,11 +12,20 @@
     </style>
   </head>
   <body>
+    <script src="index.js"></script>
     <div class="add-view">
         <h1>積んサイトを追加する</h1>
+        <div class="login_container">
+          <button class="login_button">
+            ログイン
+          </button>
+        </div>
         <div>
             <span>タイトル　</span>
             <input type="text" id="title" disabled></input>
+            <br />
+            <span>URL</span>
+            <input type="text" id="url" disabled></input>
         </div>
         <div class="tag-area">
             <span>タグ　</span>
@@ -30,7 +38,7 @@
             </div>
             <div>
                 <span>今までのタグ</span>
-                <button class="tag old-tag" value="タグ">タグ</button>
+                <button class="tag old-tag" value="タグ" id="tags">タグ</button>
             </div>
         </div>
         <div class="button-wrap">
