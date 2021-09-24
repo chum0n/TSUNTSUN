@@ -49,6 +49,6 @@ webアプリだけでなく、Chrome拡張やLINEbotと同期していつでも�
   </tr>
   <tr>
     <th>使用技術</th>
-    <td>TypeScript, Go, Heroku</td>
+    <td>React.js×TypeScript, Go, Heroku</td>
   </tr>
 </table>
