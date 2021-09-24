@@ -4,6 +4,7 @@ import {
   RiCalendarCheckFill,
   RiTimerLine,
   RiCheckLine,
+  RiExternalLinkLine,
 } from "react-icons/ri";
 import Button from "./button";
 import Tag from "./tag";
@@ -90,7 +91,16 @@ const Tsumi: React.FC<
     <Article key={id}>
       <ContentWrap>
         <Title>
-          {url === "" ? title : <NoStyleLink href={url}>{title}</NoStyleLink>}
+          {url === "" ? (
+            title
+          ) : (
+            <NoStyleLink href={url} target="_blank" rel="noopener noreferrer">
+              {title}
+              <ExternalIcon>
+                <RiExternalLinkLine size="0.8em" />
+              </ExternalIcon>
+            </NoStyleLink>
+          )}
         </Title>
         <StatusBlack>
           <Status>
@@ -180,11 +190,22 @@ const Article = styled.article`
 const NoStyleLink = styled.a`
   color: inherit;
   text-decoration: none;
+
+  :hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 `;
 
 const Icon = styled.div`
   display: inline-flex;
   margin-right: 10px;
+  color: #30371f;
+`;
+
+const ExternalIcon = styled.div`
+  display: inline-flex;
+  margin-left: 4px;
   color: #30371f;
 `;
 

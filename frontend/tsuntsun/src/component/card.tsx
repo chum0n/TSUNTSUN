@@ -20,8 +20,10 @@ const Card: React.FC<{
       <div>
         <h2>{name}</h2>
         <PageDisplay>
-          {isLastPage ? tsumis.length : page * 10}/
-          <NumBig>{tsumis.length}</NumBig>件
+          {isLastPage ? tsumis.length : page * 10}
+          <Space>/</Space>
+          <NumBig>{tsumis.length}</NumBig>
+          <Space>件</Space>
         </PageDisplay>
       </div>
       {tsumis.length !== 0 ? (
@@ -77,6 +79,10 @@ const NumBig = styled.span`
   font-size: 24px;
   font-weight: 400;
   line-height: 28px;
+`;
+
+const Space = styled.span`
+  margin: 4px;
 `;
 
 const PagenationButton = styled.button`
