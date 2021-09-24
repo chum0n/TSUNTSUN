@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Color from "../const/Color";
 import Tsumi, { TsumiObject } from "./tsumi";
 
 const Card: React.FC<{
@@ -16,7 +17,7 @@ const Card: React.FC<{
   }, [page, tsumis]);
 
   return (
-    <div>
+    <CardBase>
       <h2>{name}</h2>
       {tsumis.length !== 0 ? (
         <div>
@@ -49,11 +50,19 @@ const Card: React.FC<{
       ) : (
         <div>なし</div>
       )}
-    </div>
+    </CardBase>
   );
 };
 
 export default Card;
+
+const CardBase = styled.div`
+  width: 700px;
+  min-height: 7000px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 10px;
+`;
 
 const NumBig = styled.span`
   font-size: 24px;

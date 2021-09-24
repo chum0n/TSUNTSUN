@@ -25,7 +25,7 @@ function ResultArea() {
     swipe: true,
     focusOnSelect: true,
     speed: 500,
-    centerPadding: "160px",
+    centerPadding: "170px",
     slidesToShow: 1,
     slidesToScroll: 1,
   };
