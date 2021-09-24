@@ -26,38 +26,62 @@ function Recommend() {
       </TitleArea>
       <BodyArea>
         <OneRecommend>
-          <RiComputerLine />
-          {<a href={site?.url}>{site?.title}</a>}
-          {site?.requiredTime && (
+          <Icon>
+            <RiComputerLine size={"1.5em"} />
+          </Icon>
+          {site ? (
             <>
-              　……　{site?.requiredTime}
-              で読める！
+              {
+                <NoStyleLink
+                  href={site?.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {site?.title}
+                </NoStyleLink>
+              }
+              {site?.requiredTime && (
+                <>
+                  　……　{site?.requiredTime}
+                  分で読める！
+                </>
+              )}
             </>
+          ) : (
+            <p>全部読めました！</p>
           )}
         </OneRecommend>
         <OneRecommend>
-          <RiBookFill />
-          {book?.title}
-          {book?.deadline && (
+          <Icon>
+            <RiBookFill size={"1.5em"} />
+          </Icon>
+          {book ? (
             <>
-              　……　
-              {Math.floor(
-                (Date.parse(book?.deadline) - today.getTime()) / 86400000
-              ) >= 0
-                ? "あと"
-                : ""}
-              {Math.abs(
-                Math.floor(
-                  (Date.parse(book?.deadline) - today.getTime()) / 86400000
-                )
+              {book?.title}
+              {book?.deadline && (
+                <>
+                  　……　
+                  {Math.floor(
+                    (Date.parse(book?.deadline) - today.getTime()) / 86400000
+                  ) >= 0
+                    ? "あと"
+                    : ""}
+                  {Math.abs(
+                    Math.floor(
+                      (Date.parse(book?.deadline) - today.getTime()) / 86400000
+                    )
+                  )}
+                  日
+                  {Math.floor(
+                    (Date.parse(book?.deadline) - today.getTime()) / 86400000
+                  ) < 0
+                    ? "経過"
+                    : ""}
+                </>
               )}
-              日
-              {Math.floor(
-                (Date.parse(book?.deadline) - today.getTime()) / 86400000
-              ) < 0
-                ? "経過"
-                : ""}
             </>
+          ) : (
+            <p>全部読めました！</p>
           )}
         </OneRecommend>
       </BodyArea>
@@ -72,7 +96,7 @@ const RecommendBox = styled.div`
   display: flex;
   width: 100%;
   height: 120px;
-  margin: 16px auto;
+  margin: 32px auto;
   text-align: left;
   border-radius: 10px;
 `;
@@ -95,7 +119,24 @@ const BodyArea = styled.div`
 `;
 
 const OneRecommend = styled.div`
+  display: flex;
+  align-items: center;
   height: 50%;
   margin: 8px 0;
   font-size: large;
+`;
+
+const Icon = styled.div`
+  display: inline-flex;
+  margin-right: 10px;
+  color: #30371f;
+`;
+
+const NoStyleLink = styled.a`
+  color: inherit;
+
+  :hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 `;
