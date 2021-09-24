@@ -1,7 +1,8 @@
 import defaultAxios from "../utils/defaultAxios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { DarkButton } from "./button";
+import { RiSearchLine } from "react-icons/ri";
+import Color from "../const/Color";
 import { TagObject } from "./tsumi";
 
 function SearchArea() {
@@ -15,49 +16,15 @@ function SearchArea() {
   }, []);
   return (
     <Area className="search-area">
-      <OneSearchArea>
-        <Label>種類</Label>
-        <input
-          type="radio"
-          name="cat"
-          value="全て"
-          checked={radio === "全て"}
-          onChange={() => setRadio("全て")}
-        />
-        全て
-        <input
-          type="radio"
-          name="cat"
-          value="本のみ"
-          checked={radio === "本のみ"}
-          onChange={() => setRadio("本のみ")}
-        />
-        本のみ
-        <input
-          type="radio"
-          name="cat"
-          value="サイトのみ"
-          checked={radio === "サイトのみ"}
-          onChange={() => setRadio("サイトのみ")}
-        />
-        サイトのみ
-      </OneSearchArea>
-
-      <OneSearchArea>
-        <Label>タグ</Label>
-        <select name="tag">
-          <option value="" disabled></option>
-          {tags.map((t) => (
-            <option value={t.id}>{t.name}</option>
-          ))}
-        </select>
-      </OneSearchArea>
-      <OneSearchArea>
-        <Label>キーワード</Label>
-        <input type="search"></input>
-      </OneSearchArea>
+      <SelectArea>
+        <SearchSelect>
+          <option>筆者</option>
+          <option>タイトル</option>
+        </SearchSelect>
+      </SelectArea>
+      <SearchBox type="search"></SearchBox>
       <ButtonWrap>
-        <DarkButton onClick={() => {}}>検索</DarkButton>
+        <RiSearchLine onClick={() => {}} size={"2rem"} />
       </ButtonWrap>
     </Area>
   );
@@ -66,21 +33,70 @@ function SearchArea() {
 export default SearchArea;
 
 const Area = styled.div`
-  padding: 16px;
-  padding-left: 48px;
+  display: flex;
   text-align: left;
-  background: #eaf5d3;
+  background-color: white;
+  border-radius: 10px;
 `;
 
-const OneSearchArea = styled.div`
-  margin: 5px 0;
+const SelectArea = styled.div`
+  position: relative;
+  z-index: 1;
+
+  ::after {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    z-index: -1;
+    width: 8px;
+    height: 8px;
+    content: "";
+    border-right: 2px solid ${Color.DARK};
+    border-bottom: 2px solid ${Color.DARK};
+    transform: translateY(-50%) rotate(45deg);
+  }
+`;
+
+const SearchSelect = styled.select`
+  position: relative;
+  width: 7rem;
+  height: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  font-size: 1rem;
+  text-indent: 0.01px;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-right: 1px solid ${Color.DARK};
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  ::-ms-expand {
+    display: none;
+  }
+`;
+
+const SearchBox = styled.input`
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  height: 78px;
+  overflow: hidden;
+  font-size: 1.5rem;
+  border: none;
 `;
 
 const ButtonWrap = styled.div`
+  margin: auto;
+  margin-right: 10px;
+  color: ${Color.DARK};
   text-align: center;
-`;
-
-const Label = styled.label`
-  display: inline-block;
-  width: 100px;
+  cursor: pointer;
+  background: none;
+  border: none;
 `;
