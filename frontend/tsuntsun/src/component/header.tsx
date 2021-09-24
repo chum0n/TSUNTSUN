@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
+import { RiSettings3Fill, RiLogoutBoxRLine } from "react-icons/ri";
 
 const Header: React.FC<{
   name?: string;
@@ -27,8 +28,11 @@ const Header: React.FC<{
         ></img>
       </Logo>
       <div>
-        {name ? name + "さん、こんにちは" : ""}　設定
-        <LogoutButton onClick={() => logout()}>ログアウト</LogoutButton>
+        {name ? name + "さん、こんにちは" : ""}
+        <RiSettings3Fill size={"2rem"} />
+        <LogoutButton onClick={() => logout()}>
+          <RiLogoutBoxRLine size={"2rem"} />
+        </LogoutButton>
       </div>
     </HeaderBase>
   );
