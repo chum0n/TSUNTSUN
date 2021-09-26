@@ -1,10 +1,13 @@
 # 積ん読/積んサイト消化アプリ TSUNTSUN
 
-2021年6月19日〜20日に開催された[サポーターズ 技育CAMP ハッカソンvol.5「開発を効率化するアプリケーションを作ろう！」](https://talent.supporterz.jp/events/b89ddfc0-d4d0-4a9a-8092-14376eb89e85/)にて学生3人で制作し、[努力賞](https://twitter.com/geek_pjt/status/1411621002115649540)を受賞しました🎉🎉🎉
+2021年7月3日〜4日に開催された[サポーターズ 技育CAMP ハッカソンvol.5「開発を効率化するアプリケーションを作ろう！」](https://talent.supporterz.jp/events/b89ddfc0-d4d0-4a9a-8092-14376eb89e85/)にて学生3人で制作し、[努力賞](https://twitter.com/geek_pjt/status/1411621002115649540)を受賞しました🎉🎉🎉
 
 その後2021年9月25日に[技育展](https://talent.supporterz.jp/geekten/2021/)で発表させていただきました。
 
 発表スライドは[こちら](https://docs.google.com/presentation/d/1QTvS_gBiD5KMulPaR2nhy_snU0cdA9RLA8vA1edUX4A/edit?usp=sharing)
+
+## アプリの概要
+積ん読」をもっと効率的に、ということをコンセプトに、技術書/技術ブログを簡単にストックし、時間のあるときに消化を促すことで、エンジニアとしての成長をサポートするアプリケーションです。Webサイト、LINEBot、Chrome拡張の三つの機能のコラボレーションによって実現します。
 
 ## 基本操作
 LINEbotから、あるいはwebサイト閲覧中にChrome拡張を用いて積むことが出来ます。また、積ん読一覧を管理する[Webページ](https://tsuntsun.herokuapp.com/)にアクセスしても積むことが出来ます。
