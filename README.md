@@ -1,17 +1,10 @@
 # 積ん読/積んサイト消化アプリ TSUNTSUN
 
-## Figma
-https://www.figma.com/file/dbgPEnJoq0pUePFG7shC7a/%E7%A9%8D%E3%82%93%E3%82%B5%E3%82%A4%E3%83%88
-
-## DB
-https://dbdiagram.io/d/60d46a5edd6a5971481dbadd
-
-
 2021年6月19日〜20日に開催された[サポーターズ 技育CAMP ハッカソンvol.5「開発を効率化するアプリケーションを作ろう！」](https://talent.supporterz.jp/events/b89ddfc0-d4d0-4a9a-8092-14376eb89e85/)にて学生3人で制作し、[努力賞](https://twitter.com/geek_pjt/status/1411621002115649540)を受賞しました🎉🎉🎉
 
-**こちらから遊べます！**
+その後2021年9月25日に[技育展](https://talent.supporterz.jp/geekten/2021/)で発表させていただきました。
 
-ハッカソン成果発表時のスライドは[こちら](https://docs.google.com/presentation/d/1D7iV9qCcRy8VnBPi11Js9IUczvXBJLoRVYohTOf4QlQ/edit?usp=sharing)
+発表スライドは[こちら](https://docs.google.com/presentation/d/1QTvS_gBiD5KMulPaR2nhy_snU0cdA9RLA8vA1edUX4A/edit?usp=sharing)
 
 ## 基本操作
 LINEbotから、あるいはwebサイト閲覧中にChrome拡張を用いて積むことが出来ます。また、積ん読一覧を管理する[Webページ](https://tsuntsun.herokuapp.com/)にアクセスしても積むことが出来ます。
@@ -49,6 +42,6 @@ webアプリだけでなく、Chrome拡張やLINEbotと同期していつでも�
   </tr>
   <tr>
     <th>使用技術</th>
-    <td>React.js×TypeScript, Go, Heroku</td>
+    <td>React.js×TypeScript, Golang(echo), PostgreSQL, Heroku</td>
   </tr>
 </table>
